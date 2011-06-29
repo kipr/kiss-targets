@@ -1,0 +1,8 @@
+kiss.pri
+.DS_Store
+Makefile
+*.o
+root/*
+*.dylib
+moc_*
+ui_*
