@@ -25,13 +25,9 @@ QMAKE_CLEAN += $(DESTDIR)/$(TARGET) src/*~
 #################
 # Extra targets #
 #################
-unix:  COPY = cp
-!unix: COPY = copy
+lib_dir.target = lib
+lib_dir.commands = mkdir -p lib
 
-unix: {
-	lib_dir.target = lib
-	lib_dir.commands = mkdir -p lib
-}
 
 QMAKE_EXTRA_TARGETS += lib_dir include_dir
 POST_TARGETDEPS += $$lib_dir.target $$include_dir.target
@@ -48,7 +44,7 @@ java-target.target = java-target
 java-target.depends = java-target-file
 
 java-target-file.target = java.target
-java-target-file.commands = $${COPY} $${java_TARGET_SOURCE} java.target
+java-target-file.commands = cp $${java_TARGET_SOURCE} java.target
 java-target-file.depends = java-target-source
 
 java-target-source.target = $${java_TARGET_SOURCE}
@@ -63,12 +59,11 @@ QMAKE_CLEAN += java.target
 # Install Directives #
 ######################
 
-unix: GCC_TARGET_FILE_INSTALL = ../$${INSTALL_BASE}/targets/gcc/gcc.target
-!unix: GCC_TARGET_FILE_INSTALL = ..\\$${INSTALL_BASE}\\targets\\gcc\\gcc.target
+GCC_TARGET_FILE_INSTALL = ../$${INSTALL_BASE}/targets/gcc/gcc.target
 
 target_base.files = java.api template.c
 target_base.path = ../$${INSTALL_BASE}/targets/java
-target_base.extra = $${COPY} java.target $${GCC_TARGET_FILE_INSTALL}
+target_base.extra = cp java.target $${GCC_TARGET_FILE_INSTALL}
 
 target.path = ../$${INSTALL_BASE}/targets/java
 

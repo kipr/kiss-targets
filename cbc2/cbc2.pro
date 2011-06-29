@@ -22,8 +22,7 @@ QMAKE_CLEAN += $(DESTDIR)/$(TARGET) src/*~
 #################
 # Extra targets #
 #################
-unix:  COPY = cp
-!unix: COPY = copy
+COPY = cp
 
 unix: {
 	lib_dir.target = lib
@@ -110,23 +109,11 @@ INSTALLS += target target_base target_include target_lib target_manual target_ma
 # cbc2_sim stuff #
 #################
 
-# Way ugly but nicer in the end
+CBC2_SIM_LIB = ../libraries/simulator/cbc2_sim/libcbc2_sim.a
+CBC2_SIM_LIB_DEST = lib/libcbc2_sim.a
 
-unix: {
-	CBC2_SIM_LIB = ../libraries/simulator/cbc2_sim/libcbc2_sim.a
-	CBC2_SIM_LIB_DEST = lib/libcbc2_sim.a
-
-	CBC2_SIM_HEADER = ../libraries/simulator/cbc2_sim/include/cbc2-sim.h
-	CBC2_SIM_HEADER_DEST = include/cbc2-sim.h
-}
-
-!unix:{
-	CBC2_SIM_LIB = ..\\libraries\\simulator\\cbc2_sim\\libcbc2_sim.a
-	CBC2_SIM_LIB_DEST = lib\\libcbc2_sim.a
-
-	CBC2_SIM_HEADER = ..\\libraries\\simulator\\cbc2_sim\\include\\cbc2-sim.h
-	CBC2_SIM_HEADER_DEST = include\\cbc2-sim.h
-}
+CBC2_SIM_HEADER = ../libraries/simulator/cbc2_sim/include/cbc2-sim.h
+CBC2_SIM_HEADER_DEST = include/cbc2-sim.h
 
 cbc2_sim.target = cbc2_sim
 cbc2_sim.depends = cbc2_sim-lib cbc2_sim-headers

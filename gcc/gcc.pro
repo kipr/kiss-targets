@@ -22,16 +22,14 @@ QMAKE_CLEAN += $(DESTDIR)/$(TARGET) src/*~
 #################
 # Extra targets #
 #################
-unix:  COPY = cp
-!unix: COPY = copy
+COPY = cp
 
-unix: {
-	lib_dir.target = lib
-	lib_dir.commands = mkdir -p lib
 
-	include_dir.target = include
-	include_dir.commands = mkdir -p include/GL
-}
+lib_dir.target = lib
+lib_dir.commands = mkdir -p lib
+
+include_dir.target = include
+include_dir.commands = mkdir -p include/GL
 
 QMAKE_EXTRA_TARGETS += lib_dir include_dir
 POST_TARGETDEPS += $$lib_dir.target $$include_dir.target
@@ -63,18 +61,10 @@ QMAKE_CLEAN += gcc.target
 # glfw #
 ########
 
-unix:{
-	GLFW_LIB = ../external/lib/libglfw.a
-	GLFW_LIB_DEST = lib/libglfw.a
-	GLFW_HEADER = ../external/include/GL/glfw.h
-	GLFW_HEADER_DEST = include/GL/glfw.h
-}
-!unix:{
-	GLFW_LIB = ..\\external\\lib\\libglfw.a
-	GLFW_LIB_DEST = lib\\libglfw.a
-	GLFW_HEADER = ..\\external\\include\\GL\\glfw.h
-	GLFW_HEADER_DEST = include\\GL\\glfw.h
-}
+GLFW_LIB = ../external/lib/libglfw.a
+GLFW_LIB_DEST = lib/libglfw.a
+GLFW_HEADER = ../external/include/GL/glfw.h
+GLFW_HEADER_DEST = include/GL/glfw.h
 
 glfw.target = glfw
 glfw.depends = glfw-lib glfw-header
@@ -98,18 +88,10 @@ QMAKE_CLEAN += $${GLFW_LIB_DEST} $${GLFW_HEADER_DEST}
 # GLee #
 ########
 
-unix:{
-	GLEE_LIB = ../external/lib/libGLee.a
-	GLEE_LIB_DEST = lib/libGLee.a
-	GLEE_HEADER = ../external/include/GL/GLee.h
-	GLEE_HEADER_DEST = include/GL/GLee.h
-}
-!unix:{
-	GLEE_LIB = ..\\external\\lib\\libGLee.a
-	GLEE_LIB_DEST = lib\\libGLee.a
-	GLEE_HEADER = ..\\external\\include\\GL\\GLee.h
-	GLEE_HEADER_DEST = include\\GL\\GLee.h
-}
+GLEE_LIB = ../external/lib/libGLee.a
+GLEE_LIB_DEST = lib/libGLee.a
+GLEE_HEADER = ../external/include/GL/GLee.h
+GLEE_HEADER_DEST = include/GL/GLee.h
 
 glee.target = glee
 glee.depends = glee-lib glee-header
@@ -132,39 +114,20 @@ QMAKE_CLEAN += $${GLEE_LIB_DEST} $${GLEE_HEADER_DEST}
 # libkiss #
 ###########
 
-unix: {
-	KISS_LIB = ../libraries/kiss/libkiss.a
-	KISS_LIB_DEST = lib/libkiss.a
+KISS_LIB = ../libraries/kiss/libkiss.a
+KISS_LIB_DEST = lib/libkiss.a
 
-	KISS_HEADER_COMPAT = ../libraries/kiss/include/kiss-compat.h
-	KISS_HEADER_COMPAT_DEST = include/kiss-compat.h
+KISS_HEADER_COMPAT = ../libraries/kiss/include/kiss-compat.h
+KISS_HEADER_COMPAT_DEST = include/kiss-compat.h
 
-	KISS_HEADER_SERIAL = ../libraries/kiss/include/kiss-serial.h
-	KISS_HEADER_SERIAL_DEST = include/kiss-serial.h
+KISS_HEADER_SERIAL = ../libraries/kiss/include/kiss-serial.h
+KISS_HEADER_SERIAL_DEST = include/kiss-serial.h
 
-	KISS_HEADER_GRAPHICS = ../libraries/kiss/include/kiss-graphics.h
-	KISS_HEADER_GRAPHICS_DEST = include/kiss-graphics.h
+KISS_HEADER_GRAPHICS = ../libraries/kiss/include/kiss-graphics.h
+KISS_HEADER_GRAPHICS_DEST = include/kiss-graphics.h
 
-	KISS_HEADER_INPUT = ../libraries/kiss/include/kiss-input.h
-	KISS_HEADER_INPUT_DEST = include/kiss-input.h
-}
-
-!unix:{
-	KISS_LIB = ..\\libraries\\kiss\\libkiss.a
-	KISS_LIB_DEST = lib\\libkiss.a
-
-	KISS_HEADER_COMPAT = ..\\libraries\\kiss\\include\\kiss-compat.h
-	KISS_HEADER_COMPAT_DEST = include\\kiss-compat.h
-
-	KISS_HEADER_SERIAL = ..\\libraries\\kiss\\include\\kiss-serial.h
-	KISS_HEADER_SERIAL_DEST = include\\kiss-serial.h
-
-	KISS_HEADER_GRAPHICS = ..\\libraries\\kiss\\include\\kiss-graphics.h
-	KISS_HEADER_GRAPHICS_DEST = include\\kiss-graphics.h
-
-	KISS_HEADER_INPUT = ..\\libraries\\kiss\\include\\kiss-input.h
-	KISS_HEADER_INPUT_DEST = include\\kiss-input.h
-}
+KISS_HEADER_INPUT = ../libraries/kiss/include/kiss-input.h
+KISS_HEADER_INPUT_DEST = include/kiss-input.h
 
 kiss.target = kiss
 kiss.depends = kiss-lib kiss-headers
@@ -180,19 +143,19 @@ kiss-lib.commands = $${COPY} $${KISS_LIB} $${KISS_LIB_DEST}
 kiss-lib.depends = $${KISS_LIB}
 
 kiss-header-compat.target = $${KISS_HEADER_COMPAT_DEST}
-kiss-header-compat.commands = $${COPY} $${KISS_HEADER_COMPAT} $${KISS_HEADER_COMPAT_DEST}
+kiss-header-compat.commands = cp $${KISS_HEADER_COMPAT} $${KISS_HEADER_COMPAT_DEST}
 kiss-header-compat.depends = $${KISS_HEADER_COMPAT}
 
 kiss-header-serial.target = $${KISS_HEADER_SERIAL_DEST}
-kiss-header-serial.commands = $${COPY} $${KISS_HEADER_SERIAL} $${KISS_HEADER_SERIAL_DEST}
+kiss-header-serial.commands = cp $${KISS_HEADER_SERIAL} $${KISS_HEADER_SERIAL_DEST}
 kiss-header-serial.depends = $${KISS_HEADER_SERIAL}
 
 kiss-header-graphics.target = $${KISS_HEADER_GRAPHICS_DEST}
-kiss-header-graphics.commands = $${COPY} $${KISS_HEADER_GRAPHICS} $${KISS_HEADER_GRAPHICS_DEST}
+kiss-header-graphics.commands = cp $${KISS_HEADER_GRAPHICS} $${KISS_HEADER_GRAPHICS_DEST}
 kiss-header-graphics.depends = $${KISS_HEADER_GRAPHICS}
 
 kiss-header-input.target = $${KISS_HEADER_INPUT_DEST}
-kiss-header-input.commands = $${COPY} $${KISS_HEADER_INPUT} $${KISS_HEADER_INPUT_DEST}
+kiss-header-input.commands = cp $${KISS_HEADER_INPUT} $${KISS_HEADER_INPUT_DEST}
 kiss-header-input.depends = $${KISS_HEADER_INPUT}
 
 QMAKE_EXTRA_TARGETS += kiss kiss-lib kiss-headers kiss-header-compat kiss-header-serial kiss-header-graphics kiss-header-input
@@ -208,15 +171,9 @@ QMAKE_CLEAN += 	$${KISS_LIB_DEST} \
 ##############
 # Create Lib #
 ##############
-unix:{
-	CREATE_HEADER = ../libraries/create/kiss-create-2011.h
-	CREATE_HEADER_DEST = include/kiss-create-2011.h
-}
 
-!unix:{
-	CREATE_HEADER = ..\\libraries\\create\\kiss-create-2011.h
-	CREATE_HEADER_DEST = include\\kiss-create-2011.h
-}
+CREATE_HEADER = ../libraries/create/kiss-create-2011.h
+CREATE_HEADER_DEST = include/kiss-create-2011.h
 
 create.target = create
 create.depends = create-header
@@ -235,13 +192,11 @@ QMAKE_CLEAN += $${CREATE_HEADER_DEST}
 # Install Directives #
 ######################
 
-unix: GCC_TARGET_FILE_INSTALL = ../$${INSTALL_BASE}/targets/gcc/gcc.target
-!unix: GCC_TARGET_FILE_INSTALL = ..\\$${INSTALL_BASE}\\targets\\gcc\\gcc.target
+GCC_TARGET_FILE_INSTALL = ../$${INSTALL_BASE}/targets/gcc/gcc.target
 
-target_base.files = gcc.api \
-					template.c
+target_base.files = gcc.api template.c
 target_base.path = ../$${INSTALL_BASE}/targets/gcc
-target_base.extra = $${COPY} gcc.target $${GCC_TARGET_FILE_INSTALL}
+target_base.extra = cp gcc.target $${GCC_TARGET_FILE_INSTALL}
 
 target_include.files = ../libraries/kiss/include/kiss-compat.h \
 					   ../libraries/kiss/include/kiss-input.h \
@@ -262,12 +217,12 @@ target_lib.path = ../$${INSTALL_BASE}/targets/gcc/lib
 
 target.path = ../$${INSTALL_BASE}/targets/gcc
 
-target_manual.files = manual/CBCCSS.css \
-											manual/CBCCSS_NOSCRIPT.css \
-											manual/gccmanual.html \
-											manual/fdl-1.3.txt \
-											manual/KISSCManualBody.htm \
-											manual/KISSCManualTable.htm 
+target_manual.files = 	manual/CBCCSS.css \
+						manual/CBCCSS_NOSCRIPT.css \
+						manual/gccmanual.html \
+						manual/fdl-1.3.txt \
+						manual/KISSCManualBody.htm \
+						manual/KISSCManualTable.htm 
 											
 target_manual.path = ../$${INSTALL_BASE}/targets/gcc/manual
 
@@ -293,7 +248,7 @@ INSTALLS += target target_base target_include target_gl target_lib
 
 win32: {
 	mingw.path = ../$${INSTALL_BASE}/targets/gcc
-	mingw.extra = xcopy /d /e /i mingw ..\\$${INSTALL_BASE}\\targets\\gcc\\mingw
+	mingw.extra = cp -r mingw ../${INSTALL_BASE}/targets/gcc/mingw
 
 	INSTALLS += mingw
 }
