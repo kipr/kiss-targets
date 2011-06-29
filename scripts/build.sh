@@ -1,14 +1,12 @@
 #!/bin/sh
-if [ $# -ne 2 ]
+if [ $# -ne 1 ]
 then
-	echo "Usage: ${0} [kiss install path] [spec]"
+	echo "Usage: ${0} [kiss install path]"
 	exit 0
 fi 
 
 cd ${1}
-ABSOLUTE_KISS=`pwd`
-cd -
-echo "KISS=${ABSOLUTE_KISS}" > kiss.pri
-qmake -r -spec ${2}
+echo "KISS=${1}" > kiss.pri
+qmake -r
 make
 make install
