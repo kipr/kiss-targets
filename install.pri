@@ -15,19 +15,19 @@ macx:{
 
 macx: create_kiss_archives.extra = cd ../root; \
 	find targets/$${NAME} -type f > contents; \
-	$${KISS}/deploy/KISS.app/Contents/MacOS/KISS --createArchive $${NAME} $${VERSION} osx contents $${NAME}_target_osx.kiss; \
+	$${KISS}/deploy/KISS.app/Contents/MacOS/KISS --createArchive $${NAME} $${VER} osx contents $${NAME}_target_osx.kiss; \
 	rm contents; \
 	cd - > /dev/null
 
 unix:!macx: create_kiss_archives.extra = cd ../root; \
 	find targets/$${NAME} -type f > contents; \
-	$${KISS}/deploy/KISS.app/Contents/MacOS/KISS --createArchive $${NAME} $${VERSION} nix contents $${NAME}_target_nix.kiss; \
+	$${KISS}/deploy/KISS.app/Contents/MacOS/KISS --createArchive $${NAME} $${VER} nix contents $${NAME}_target_nix.kiss; \
 	rm contents; \
 	cd - > /dev/null
 		
 win: create_kiss_archives.extra = cd ../root; \
 	find targets/$${NAME} -type f > contents; \
-	$${KISS}/deploy/KISS --createArchive $${NAME} $${VERSION} win contents $${NAME}_target_win.kiss; \
+	$${KISS}/deploy/KISS --createArchive $${NAME} $${VER} win contents $${NAME}_target_win.kiss; \
 	rm contents; \
 	cd - > /dev/null
 

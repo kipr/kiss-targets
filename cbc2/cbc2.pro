@@ -1,7 +1,7 @@
 include(../config.pri)
 
 NAME=cbc2
-VERSION=1
+VER=1
 
 TEMPLATE = lib
 CONFIG += plugin
