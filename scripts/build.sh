@@ -5,7 +5,6 @@ then
 	exit 0
 fi 
 
-cd ${1}
 echo "KISS=${1}" > kiss.pri
 qmake -r
 make
