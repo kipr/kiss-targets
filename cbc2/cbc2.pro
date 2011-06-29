@@ -61,11 +61,9 @@ QMAKE_CLEAN += cbc2.target
 # Install Directives #
 ######################
 
-unix: CBC_TARGET_FILE_INSTALL = ../$${INSTALL_BASE}/targets/cbc2/cbc2.target
-!unix: CBC_TARGET_FILE_INSTALL = ..\\$${INSTALL_BASE}\\targets\\cbc2\\cbc2.target
+CBC_TARGET_FILE_INSTALL = ../$${INSTALL_BASE}/targets/cbc2/cbc2.target
 
-target_base.files = cbc2.api \
-					template.c
+target_base.files = cbc2.api template.c
 target_base.path = ../$${INSTALL_BASE}/targets/cbc2
 target_base.extra = $${COPY} cbc2.target $${CBC_TARGET_FILE_INSTALL}
 

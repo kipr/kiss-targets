@@ -25,7 +25,11 @@ unix:!macx: create_kiss_archives.extra = cd ../root; \
 	rm contents; \
 	cd - > /dev/null
 		
-win: create_kiss_archives.extra = echo "NYI"
+win: create_kiss_archives.extra = cd ../root; \
+	find targets/$${NAME} -type f > contents; \
+	$${KISS}/deploy/KISS --createArchive $${NAME} $${VERSION} win contents $${NAME}_target_win.kiss; \
+	rm contents; \
+	cd - > /dev/null
 
 create_kiss_archives.path = ../root
 
