@@ -59,7 +59,7 @@ QMAKE_CLEAN += java.target
 # Install Directives #
 ######################
 
-GCC_TARGET_FILE_INSTALL = ../$${INSTALL_BASE}/targets/gcc/gcc.target
+GCC_TARGET_FILE_INSTALL = ../$${INSTALL_BASE}/targets/java/java.target
 
 target_base.files = java.api template.c
 target_base.path = ../$${INSTALL_BASE}/targets/java
