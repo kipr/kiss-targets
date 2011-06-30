@@ -206,8 +206,7 @@ target_include.files = ../libraries/kiss/include/kiss-compat.h \
 
 target_include.path = ../$${INSTALL_BASE}/targets/gcc/include
 
-target_gl.files = ../external/include/GL/glfw.h \
-				  ../external/include/GL/GLee.h
+target_gl.files = ../external/include/GL/glfw.h ../external/include/GL/GLee.h
 target_gl.path = ../$${INSTALL_BASE}/targets/gcc/include/GL
 
 target_lib.files = ../external/lib/libglfw.a \
@@ -248,7 +247,7 @@ INSTALLS += target target_base target_include target_gl target_lib
 
 win32: {
 	mingw.path = ../$${INSTALL_BASE}/targets/gcc
-	mingw.extra = cp -r mingw ../$${INSTALL_BASE}/targets/gcc/mingw
+	mingw.extra = rm -Rf ../$${INSTALL_BASE}/targets/gcc/mingw; cp -r mingw ../$${INSTALL_BASE}/targets/gcc/mingw
 
 	INSTALLS += mingw
 }
