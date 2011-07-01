@@ -24,7 +24,6 @@ QMAKE_CLEAN += $(DESTDIR)/$(TARGET) src/*~
 #################
 COPY = cp
 
-
 lib_dir.target = lib
 lib_dir.commands = mkdir -p lib
 
@@ -37,10 +36,9 @@ POST_TARGETDEPS += $$lib_dir.target $$include_dir.target
 ##############################
 # Install proper target file #
 ##############################
-
 macx: GCC_TARGET_SOURCE = gcc.target.mac
 unix:!macx: GCC_TARGET_SOURCE = gcc.target.linux
-windows: GCC_TARGET_SOURCE = gcc.target.windows
+win32: GCC_TARGET_SOURCE = gcc.target.windows
 
 gcc-target.target = gcc-target
 gcc-target.depends = gcc-target-file
@@ -60,7 +58,6 @@ QMAKE_CLEAN += gcc.target
 ########
 # glfw #
 ########
-
 GLFW_LIB = ../external/lib/libglfw.a
 GLFW_LIB_DEST = lib/libglfw.a
 GLFW_HEADER = ../external/include/GL/glfw.h
@@ -83,11 +80,9 @@ POST_TARGETDEPS += glfw
 
 QMAKE_CLEAN += $${GLFW_LIB_DEST} $${GLFW_HEADER_DEST}
 
-
 ########
 # GLee #
 ########
-
 GLEE_LIB = ../external/lib/libGLee.a
 GLEE_LIB_DEST = lib/libGLee.a
 GLEE_HEADER = ../external/include/GL/GLee.h
@@ -113,7 +108,6 @@ QMAKE_CLEAN += $${GLEE_LIB_DEST} $${GLEE_HEADER_DEST}
 ###########
 # libkiss #
 ###########
-
 KISS_LIB = ../libraries/kiss/libkiss.a
 KISS_LIB_DEST = lib/libkiss.a
 
@@ -171,7 +165,6 @@ QMAKE_CLEAN += 	$${KISS_LIB_DEST} \
 ##############
 # Create Lib #
 ##############
-
 CREATE_HEADER = ../libraries/create/kiss-create-2011.h
 CREATE_HEADER_DEST = include/kiss-create-2011.h
 
@@ -191,7 +184,6 @@ QMAKE_CLEAN += $${CREATE_HEADER_DEST}
 ######################
 # Install Directives #
 ######################
-
 GCC_TARGET_FILE_INSTALL = ../$${INSTALL_BASE}/targets/gcc/gcc.target
 
 target_base.files = gcc.api template.c
@@ -239,12 +231,11 @@ target_manual_images.files = manual/Images/box-minus.bmp \
 
 target_manual_images.path = ../$${INSTALL_BASE}/targets/gcc/manual/Images
 
-INSTALLS += target target_base target_include target_gl target_lib
+INSTALLS += target target_base target_include target_gl target_lib target_manual target_manual_images
 
 #################################
 # Windows specifing MinGW stuff #
 #################################
-
 win32: {
 	mingw.path = ../$${INSTALL_BASE}/targets/gcc
 	mingw.extra = rm -Rf ../$${INSTALL_BASE}/targets/gcc/mingw; cp -r mingw ../$${INSTALL_BASE}/targets/gcc/mingw

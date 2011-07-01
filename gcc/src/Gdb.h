@@ -22,7 +22,6 @@ public:
 	void send(const QString& str);
 	void addBreakpoint(const QString& filename, const int lineNum);
 	void breakpoints();
-	void where();
 	void backtrace();
 	void value(const QString& variable);
 	void variables();

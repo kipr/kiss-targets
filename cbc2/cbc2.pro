@@ -24,12 +24,10 @@ QMAKE_CLEAN += $(DESTDIR)/$(TARGET) src/*~
 #################
 COPY = cp
 
-unix: {
-	lib_dir.target = lib
-	lib_dir.commands = mkdir -p lib
-	include_dir.target = include
-	include_dir.commands = mkdir -p include
-}
+lib_dir.target = lib
+lib_dir.commands = mkdir -p lib
+include_dir.target = include
+include_dir.commands = mkdir -p include
 
 QMAKE_EXTRA_TARGETS += lib_dir include_dir
 POST_TARGETDEPS += $$lib_dir.target $$include_dir.target
@@ -40,7 +38,7 @@ POST_TARGETDEPS += $$lib_dir.target $$include_dir.target
 
 macx: CBC_TARGET_SOURCE = cbc2.target.mac
 unix:!macx: CBC_TARGET_SOURCE = cbc2.target.linux
-windows: CBC_TARGET_SOURCE = cbc2.target.windows
+win32: CBC_TARGET_SOURCE = cbc2.target.windows
 
 cbc-target.target = cbc-target
 cbc-target.depends = cbc-target-file

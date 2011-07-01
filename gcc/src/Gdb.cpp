@@ -12,7 +12,8 @@ Gdb::Gdb(QString filename) : m_filename(filename), m_active(false), m_run(false)
 
 Gdb::~Gdb()
 {
-	m_process.kill();
+	send("-gdb-exit");
+	m_process.waitForFinished(3000);
 }
 
 void Gdb::run()
@@ -27,7 +28,7 @@ void Gdb::run()
 	}
 	m_active = true;
 	
-	m_responder->programStarted();
+	if(m_responder) m_responder->programStarted();
 }
 
 void Gdb::stop()
@@ -38,14 +39,14 @@ void Gdb::stop()
 	
 	m_libs.clear();
 	
-	m_responder->programStopped();
+	if(m_responder) m_responder->programStopped();
 }
 
 void Gdb::step()
 {
 	m_process.write("-exec-step\n");
 	
-	m_responder->programStepped();
+	if(m_responder) m_responder->programStepped();
 }
 
 void Gdb::pause()
@@ -67,11 +68,6 @@ void Gdb::addBreakpoint(const QString& filename, const int lineNum)
 void Gdb::breakpoints()
 {
 	send("-break-list");
-}
-
-void Gdb::where()
-{
-	send("where");
 }
 
 void Gdb::backtrace()
@@ -113,7 +109,7 @@ void Gdb::readyRead()
 	else {
 		if(input.contains("(gdb)")) return;
 		if(input.startsWith("&")) return;
-		m_responder->writeStdout(input.data());
+		if(m_responder) m_responder->writeStdout(input.data());
 	}
 }
 
@@ -131,7 +127,7 @@ void Gdb::parse(const QByteArray& input)
 	else if(input.startsWith("*stopped")) stopped(input.data());
 	else if(input.startsWith("=shlibs-added")) m_libs += shlibsAdded(input.data());
 	qWarning() << "Updating";
-	m_responder->update();
+	if(m_responder) m_responder->update();
 }
 
 QString Gdb::shlibsAdded(const QString& data)
@@ -144,14 +140,14 @@ void Gdb::stopped(const QString& data)
 	qWarning() << "STOPPED!";
 	QString runningTime = cString(data, after(data, "wallclock="));
 	QString reason = cString(data, after(data, "reason="));
-	m_responder->writeStdout("Program Stopped. Running Time: " + runningTime + ", Reason: " + reason + "\n");
+	if(m_responder) m_responder->writeStdout("Program Stopped. Running Time: " + runningTime + ", Reason: " + reason + "\n");
 	
 	if(reason == "exited-normally") {
 		m_run = false;
 		m_libs.clear();
-		m_responder->programStopped();
+		if(m_responder) m_responder->programStopped();
 	} else {
-		m_responder->programPaused();
+		if(m_responder) m_responder->programPaused();
 	}
 }
 
@@ -190,7 +186,7 @@ void Gdb::stackArgs(const QString& data)
 		++i;
 	}
 	
-	m_responder->stack(m_frames);
+	if(m_responder) m_responder->stack(m_frames);
 	m_frames.clear();
 }
 
@@ -203,7 +199,7 @@ void Gdb::locals(const QString& data)
 		Variable local(cString(var, 0), cString(var, after(var, "value=")));
 		localList.append(local);
 	}
-	m_responder->variables(localList);
+	if(m_responder) m_responder->variables(localList);
 }
 
 void Gdb::breakpointTable(const QString& data)
@@ -218,7 +214,7 @@ void Gdb::breakpointTable(const QString& data)
 		b.line = cString(bkpt, after(bkpt, "line=")).toInt();
 		b.enabled = cString(bkpt, after(bkpt, "enabled=")).contains("y") ? true : false; 
 	}
-	m_responder->breakpoints(bs);
+	if(m_responder) m_responder->breakpoints(bs);
 }
 
 QString Gdb::cString(const QString& data, int starting)

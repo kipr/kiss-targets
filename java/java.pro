@@ -38,7 +38,7 @@ POST_TARGETDEPS += $$lib_dir.target $$include_dir.target
 
 macx: java_TARGET_SOURCE = java.target.mac
 unix:!macx: java_TARGET_SOURCE = java.target.linux
-windows: java_TARGET_SOURCE = java.target.windows
+win32: java_TARGET_SOURCE = java.target.windows
 
 java-target.target = java-target
 java-target.depends = java-target-file
