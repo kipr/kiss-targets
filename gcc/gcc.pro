@@ -7,15 +7,15 @@ TEMPLATE = lib
 CONFIG += plugin
 TARGET = $$qtLibraryTarget(gcc_plugin)
 DEPENDPATH += src
-INCLUDEPATH += src
+INCLUDEPATH += src ../libraries/gdb
 DESTDIR = .
 
 win32:TARGET = $$qtLibraryTarget(libgcc_plugin)
 
-LIBS += -lqscintilla2
+LIBS += -L../libraries/gdb -lgdb
 
-HEADERS += 	Gcc.h Gdb.h
-SOURCES += 	Gcc.cpp Gdb.cpp 
+HEADERS += 	Gcc.h
+SOURCES += 	Gcc.cpp
 
 QMAKE_CLEAN += $(DESTDIR)/$(TARGET) src/*~
 
@@ -242,5 +242,14 @@ win32: {
 
 	INSTALLS += mingw
 }
+
+#############
+# Templates #
+#############
+
+templates.path = ../$${INSTALL_BASE}/targets/gcc
+templates.extra = rm -Rf ../$${INSTALL_BASE}/targets/gcc/templates; cp -r templates ../$${INSTALL_BASE}/targets/gcc/templates
+
+INSTALLS += templates
 
 include (../install.pri)

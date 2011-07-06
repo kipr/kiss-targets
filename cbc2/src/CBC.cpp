@@ -19,6 +19,7 @@
  **************************************************************************/
 
 #include "CBC.h"
+#include "Gdb.h"
 
 #include <QProcess>
 #include <QString>
@@ -41,17 +42,12 @@ CBC::CBC()
 #endif
 
 	QFileInfo gccExecutable(m_gccPath);
-	if(!gccExecutable.exists())
-		QMessageBox::critical(0, "Error", "Could not find G++ Executable!");
+	if(!gccExecutable.exists()) QMessageBox::critical(0, "Error", "Could not find gcc Executable!");
 
 	m_gcc.setReadChannel(QProcess::StandardError);
 	
-	// m_actionList.push_back(m_toolbar.toolbarAction());
-
 //FIXME This is ugly
 #ifdef Q_OS_MAC
-	system(("ranlib " + QDir::currentPath() + "/targets/gcc/lib/*.a").toLocal8Bit());
-	system(("ranlib " + QDir::currentPath() + "/targets/cbc/lib/*.a").toLocal8Bit());
 	system(("ranlib " + QDir::currentPath() + "/targets/cbc2/lib/*.a").toLocal8Bit());
 #endif
 }
@@ -64,51 +60,7 @@ CBC::~CBC()
 
 bool CBC::compile(const QString& filename, const QString& port)
 {
-	QString p = port;
-	
-	QFileInfo sourceInfo(filename);
-	QStringList args;
-
-	refreshSettings();
-
-#ifdef Q_OS_WIN32
-	m_outputFileName = sourceInfo.dir().absoluteFilePath(sourceInfo.baseName() + ".exe");
-#else
-	m_outputFileName = sourceInfo.dir().absoluteFilePath(sourceInfo.baseName());
-#endif
-	QString objectName = sourceInfo.dir().absoluteFilePath(sourceInfo.baseName() + ".o");
-
-	QFileInfo outputInfo(m_outputFileName);
-	if(sourceInfo.lastModified() < outputInfo.lastModified())
-		return true;
-
-	args = m_cflags;
-	p.replace("\\", "\\\\");
-	args << "-DDEFAULT_SERIAL_PORT=\"" + p + "\"";
-	args << "-c" << filename << "-o" << objectName;
-	qWarning() << "Object Args:" << args;
-	m_gcc.start(m_gccPath, args);
-	m_gcc.waitForFinished();
-	processCompilerOutput();
-	m_linkerMessages.clear();
-
-	if(m_gcc.exitCode() != 0)
-		return false;
-
-	args.clear();
-	args << "-o" << m_outputFileName << objectName;
-	args << m_lflags;
-	qWarning() << "Linker Args:" << args;
-	m_gcc.start(m_gccPath, args);
-	m_gcc.waitForFinished();
-	processLinkerOutput();
-
-	QFile objectFile(objectName);
-	objectFile.remove();
-
-	if(m_gcc.exitCode() == 0)
-		return true;
-	return false;
+	return compile(filename, port, false);
 }
 
 QStringList CBC::getPaths(const QString& string)
@@ -215,6 +167,14 @@ bool CBC::simulate(const QString& filename, const QString& port)
   return true;
 }
 
+DebuggerInterface* CBC::debug(const QString& filename, const QString& port)
+{
+	if(!compile(filename, port, true)) 
+		return 0;
+		
+	return new Gdb(m_outputFileName);
+}
+
 void CBC::processCompilerOutput()
 {
 	bool foundError=false,foundWarning=false;
@@ -313,6 +273,58 @@ void CBC::refreshSettings()
     m_lflags << "-isysroot" << "/Developer/SDKs/MacOSX10.4u.sdk";
 	}
 #endif
+}
+
+bool CBC::compile(const QString& filename, const QString& port, bool debug)
+{
+	QString p = port;
+	
+	QFileInfo sourceInfo(filename);
+	QStringList args;
+
+	refreshSettings();
+
+#ifdef Q_OS_WIN32
+	m_outputFileName = sourceInfo.dir().absoluteFilePath(sourceInfo.baseName() + ".exe");
+#else
+	m_outputFileName = sourceInfo.dir().absoluteFilePath(sourceInfo.baseName());
+#endif
+	QString objectName = sourceInfo.dir().absoluteFilePath(sourceInfo.baseName() + ".o");
+
+	QFileInfo outputInfo(m_outputFileName);
+	if(sourceInfo.lastModified() < outputInfo.lastModified())
+		return true;
+
+	args = m_cflags;
+	p.replace("\\", "\\\\");
+	args << "-DDEFAULT_SERIAL_PORT=\"" + p + "\"";
+	args << "-c" << filename << "-o" << objectName;
+	if(debug) args << "-g" << "-pg";
+	qWarning() << "Object Args:" << args;
+	m_gcc.start(m_gccPath, args);
+	m_gcc.waitForFinished();
+	processCompilerOutput();
+	m_linkerMessages.clear();
+
+	if(m_gcc.exitCode() != 0)
+		return false;
+
+	args.clear();
+	args << "-o" << m_outputFileName << objectName;
+	args << m_lflags;
+	qWarning() << "Linker Args:" << args;
+	m_gcc.start(m_gccPath, args);
+	m_gcc.waitForFinished();
+	processLinkerOutput();
+
+	if(!debug) {
+		QFile objectFile(objectName);
+		objectFile.remove();
+	}
+
+	if(m_gcc.exitCode() == 0)
+		return true;
+	return false;
 }
 
 Q_EXPORT_PLUGIN2(cbc_plugin, CBC);

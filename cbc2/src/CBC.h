@@ -45,16 +45,18 @@ public:
 	void stop(const QString&) {}
 	bool download(const QString& filename, const QString& port);
 	bool simulate(const QString& filename, const QString& port);
-	DebuggerInterface* debug(const QString&, const QString&) { return 0; }
+	DebuggerInterface* debug(const QString&, const QString&);
 
 	bool hasCompile() 	{ return true; }
 	bool hasRun() 		{ return false; }
 	bool hasDownload() 	{ return true; }
 	bool hasStop() 		{ return false; }
 	bool hasSimulate() 	{ return true; }
-	bool hasDebug() 	{ return false; }
+	bool hasDebug() 	{ return true; }
 
 private:
+	bool compile(const QString& filename, const QString& port, bool debug);
+	
 	QProcess m_gcc;
 	QProcess m_outputBinary;
 	QString m_gccPath;

@@ -7,12 +7,12 @@ TEMPLATE = lib
 CONFIG += plugin
 TARGET = $$qtLibraryTarget(cbc2_plugin)
 DEPENDPATH += src
-INCLUDEPATH += src
+INCLUDEPATH += src ../libraries/gdb
 DESTDIR = .
 
 win32:TARGET = $$qtLibraryTarget(libcbc2_plugin)
 
-LIBS += -lqscintilla2 
+LIBS += -L../libraries/gdb -lgdb
 
 HEADERS += CBC.h SerialClient.h QSerialPort.h
 SOURCES += CBC.cpp SerialClient.cpp QSerialPort.cpp
@@ -130,5 +130,14 @@ QMAKE_EXTRA_TARGETS += cbc2_sim cbc2_sim-lib cbc2_sim-headers cbc2_sim-header
 POST_TARGETDEPS += cbc2_sim
 
 QMAKE_CLEAN += $${CBC2_SIM_LIB_DEST} $${CBC2_SIM_HEADER_DEST}
+
+#############
+# Templates #
+#############
+
+templates.path = ../$${INSTALL_BASE}/targets/cbc2
+templates.extra = rm -Rf ../$${INSTALL_BASE}/targets/cbc2/templates; cp -r templates ../$${INSTALL_BASE}/targets/cbc2/templates
+
+INSTALLS += templates
 
 include (../install.pri)

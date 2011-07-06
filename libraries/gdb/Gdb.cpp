@@ -113,20 +113,21 @@ void Gdb::readyRead()
 	}
 }
 
-void Gdb::parse(const QByteArray& input)
+void Gdb::parse(const QByteArray& inputs)
 {
-	qWarning() << "Parse!";
-	if(input.startsWith("~")) m_responder->writeDebugState(cString(input.data(), 1));
-	else if(input.startsWith("^error")) m_responder->writeStderr(cString(input.data(), after(input.data(), "msg=")));
-	else if(input.startsWith("^done,stack=")) stack(input.data());
-	else if(input.startsWith("^done,stack-args=")) stackArgs(input.data());
-	else if(input.startsWith("^done,locals=")) locals(input.data());
-	else if(input.startsWith("^done,BreakpointTable=")) breakpointTable(input.data());
-	else if(input.startsWith("^done,bkpt="));
-	else if(input.startsWith("^done")) m_responder->writeDebugState(cString(input.data(), after(input.data(), "reason=")));
-	else if(input.startsWith("*stopped")) stopped(input.data());
-	else if(input.startsWith("=shlibs-added")) m_libs += shlibsAdded(input.data());
-	qWarning() << "Updating";
+	foreach(const QByteArray& input, inputs.split('\n')) {
+		qWarning() << "line" << input;
+		if(input.startsWith("~")) m_responder->writeDebugState(cString(input.data(), 1));
+		else if(input.startsWith("^error")) m_responder->writeStderr(cString(input.data(), after(input.data(), "msg=")));
+		else if(input.startsWith("^done,stack=")) stack(input.data());
+		else if(input.startsWith("^done,stack-args=")) stackArgs(input.data());
+		else if(input.startsWith("^done,locals=")) locals(input.data());
+		else if(input.startsWith("^done,BreakpointTable=")) breakpointTable(input.data());
+		else if(input.startsWith("^done,bkpt="));
+		else if(input.startsWith("^done")) m_responder->writeDebugState(cString(input.data(), after(input.data(), "reason=")));
+		else if(input.startsWith("*stopped")) stopped(input.data());
+		else if(input.startsWith("=shlibs-added")) m_libs += shlibsAdded(input.data());
+	}
 	if(m_responder) m_responder->update();
 }
 

@@ -1,0 +1,11 @@
+// Created on KISS_DATE
+
+#include <iostream>
+
+using namespace std;
+
+int main() 
+{
+	cout << "Hello, World!" << endl;
+	return 0;
+}
