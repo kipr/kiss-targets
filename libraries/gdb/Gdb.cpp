@@ -1,5 +1,6 @@
 #include "Gdb.h"
 #include <QDebug>
+#include <QDir>
 
 #ifndef Q_OS_WIN
 #define GDB "/usr/bin/gdb"
