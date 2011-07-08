@@ -2,6 +2,7 @@ kiss.pri
 .DS_Store
 Makefile
 *.o
+*.a
 root/*
 *.dylib
 moc_*

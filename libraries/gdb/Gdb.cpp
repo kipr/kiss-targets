@@ -1,12 +1,18 @@
 #include "Gdb.h"
 #include <QDebug>
 
+#ifndef Q_OS_WIN
+#define GDB "/usr/bin/gdb"
+#else
+#define GDB (QDir::currentDir() + "/targets/gcc/mingw/bin/gdb")
+#endif
+
 Gdb::Gdb(QString filename) : m_filename(filename), m_active(false), m_run(false)
 {
 	connect(&m_process, SIGNAL(error(QProcess::ProcessError)), this, SLOT(gdbError(QProcess::ProcessError)));
 	connect(&m_process, SIGNAL(readyRead()), this, SLOT(readyRead()));
 	qWarning() << "--interpreter=mi" << filename << "-q";
-	m_process.start("/usr/bin/gdb", QStringList() << "--interpreter=mi" << filename << "-q");
+	m_process.start(GDB, QStringList() << "--interpreter=mi" << filename << "-q");
 	qWarning() << "Started gdb";
 }
 
@@ -86,10 +92,7 @@ void Gdb::variables()
 	send("-stack-list-locals --all-values");
 }
 
-void Gdb::threads()
-{
-
-}
+void Gdb::threads() {}
 
 void Gdb::gdbError(QProcess::ProcessError err)
 {

@@ -19,7 +19,7 @@
  **************************************************************************/
  
 #include "Java.h"
-
+#include "QSerialPort.h"
 #include <QProcess>
 #include <QString>
 #include <QFileInfo>
@@ -63,8 +63,8 @@ bool Java::compile(const QString& filename, const QString& port)
 	if(sourceInfo.lastModified() < outputInfo.lastModified())
 		return true;
 
-	args = m_cflags;
-	args << filename;
+	args << "-cp" << "targets/java/lib/CBCJVM.jar" << filename;
+	qWarning() << args;
 	m_java.start(m_javaPath, args);
 	m_java.waitForFinished();
 	processCompilerOutput();
@@ -133,6 +133,16 @@ bool Java::run(const QString& filename, const QString& port)
 
 }
 
+bool Java::download(const QString& filename, const QString& port)
+{
+	if(!compile(filename, port)) return false;
+
+	if(!QSerialPort(port).open(QIODevice::ReadWrite)) return false;
+
+	m_serial.setPort(port);
+	return m_serial.sendFile(m_outputFileName, QStringList());
+}
+
 void Java::processCompilerOutput()
 {
 	bool foundError=false,foundWarning=false;
@@ -180,16 +190,6 @@ void Java::processCompilerOutput()
 		m_errorMessages.clear();
 	else if(!foundWarning)
 		m_warningMessages.clear();
-}
-
-void Java::processLinkerOutput()
-{
-	m_linkerMessages.clear();
-	while(m_java.canReadLine()) {
-		QString line = QString::fromLocal8Bit(m_java.readLine()).remove(QRegExp("\\r*\\n$"));
-		m_verboseMessages << line;
-		m_linkerMessages << line;
-	}
 }
 
 void Java::refreshSettings()

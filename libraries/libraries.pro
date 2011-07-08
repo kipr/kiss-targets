@@ -1,2 +1,2 @@
 TEMPLATE = subdirs
-SUBDIRS = kiss simulator gdb
+SUBDIRS = kiss simulator gdb cbcserial

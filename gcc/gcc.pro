@@ -7,12 +7,12 @@ TEMPLATE = lib
 CONFIG += plugin
 TARGET = $$qtLibraryTarget(gcc_plugin)
 DEPENDPATH += src
-INCLUDEPATH += src ../libraries/gdb
+INCLUDEPATH += src ../libraries/gdb ../libraries/cbcserial
 DESTDIR = .
 
 win32:TARGET = $$qtLibraryTarget(libgcc_plugin)
 
-LIBS += -L../libraries/gdb -lgdb
+LIBS += -L../libraries/gdb -L../libraries/cbcserial -lgdb -lcbcserial
 
 HEADERS += 	Gcc.h
 SOURCES += 	Gcc.cpp

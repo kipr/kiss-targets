@@ -7,15 +7,15 @@ TEMPLATE = lib
 CONFIG += plugin
 TARGET = $$qtLibraryTarget(cbc2_plugin)
 DEPENDPATH += src
-INCLUDEPATH += src ../libraries/gdb
+INCLUDEPATH += src ../libraries/gdb ../libraries/cbcserial
 DESTDIR = .
 
 win32:TARGET = $$qtLibraryTarget(libcbc2_plugin)
 
-LIBS += -L../libraries/gdb -lgdb
+LIBS += -L../libraries/gdb -L../libraries/cbcserial -lgdb -lcbcserial
 
-HEADERS += CBC.h SerialClient.h QSerialPort.h
-SOURCES += CBC.cpp SerialClient.cpp QSerialPort.cpp
+HEADERS += CBC.h
+SOURCES += CBC.cpp
 
 QMAKE_CLEAN += $(DESTDIR)/$(TARGET) src/*~
 

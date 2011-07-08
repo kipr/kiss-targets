@@ -29,6 +29,7 @@
 #include "TargetInterface.h"
 #include "LexerSpec.h"
 #include "LexerStyles.h"
+#include "SerialClient.h"
 
 class Java : public QObject, public TargetInterface
 {
@@ -42,13 +43,13 @@ public:
 	bool compile(const QString& filename, const QString& port);
 	bool run(const QString& filename, const QString& port);
 	void stop(const QString&) {}
-	bool download(const QString&, const QString&) {return false;}
+	bool download(const QString&, const QString&);
 	bool simulate(const QString&, const QString&) {return false;}
 	DebuggerInterface* debug(const QString&, const QString&) { return 0; }
 
 	bool hasCompile() 	{ return true; }
 	bool hasRun() 		{ return true; }
-	bool hasDownload() 	{ return false; }
+	bool hasDownload() 	{ return true; }
 	bool hasStop() 		{ return false; }
 	bool hasSimulate() 	{ return false; }
 	bool hasDebug() 	{ return false; }
@@ -59,9 +60,9 @@ private:
 	QString m_javaPath;
 	QString m_outputFileName;
 	QStringList m_cflags,m_lflags;
+	SerialClient m_serial;
 	
 	void processCompilerOutput();
-	void processLinkerOutput();
 	void refreshSettings();
 };
 

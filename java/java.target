@@ -6,6 +6,7 @@ manual=targets/java/manual/javamanual.html
 name=java
 template=targets/java/template.java
 default_extension=java
+port_dialog=true
 
 [Target]
 lib_dirs=targets/gcc/lib

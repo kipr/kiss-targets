@@ -14,8 +14,9 @@ win32:TARGET = $$qtLibraryTarget(libjava_plugin)
 
 CONFIG -= debug debug_and_release
 CONFIG += release
+INCLUDEPATH += ../libraries/cbcserial
 
-LIBS += -lqscintilla2
+LIBS += -L../libraries/cbcserial -lcbcserial
 
 HEADERS += Java.h
 SOURCES += Java.cpp
