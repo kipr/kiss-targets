@@ -21,7 +21,7 @@
 #ifndef __SERIAL_CLIENT_H__
 #define __SERIAL_CLIENT_H__
 
-#include <QSerialPort.h>
+#include "QSerialPort.h"
 #include <QDataStream>
 #include <QStringList>
 
