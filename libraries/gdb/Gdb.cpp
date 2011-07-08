@@ -5,7 +5,7 @@
 #ifndef Q_OS_WIN
 #define GDB "/usr/bin/gdb"
 #else
-#define GDB (QDir::currentDir() + "/targets/gcc/mingw/bin/gdb")
+#define GDB (QDir::currentPath() + "/targets/gcc/mingw/bin/gdb")
 #endif
 
 Gdb::Gdb(QString filename) : m_filename(filename), m_active(false), m_run(false)
