@@ -5,6 +5,7 @@
 #include <QThread>
 #include <QProcess>
 #include <QList>
+#include <QDir>
 #include "DebuggerInterface.h"
 
 class Gdb : public QObject, public DebuggerInterface 
