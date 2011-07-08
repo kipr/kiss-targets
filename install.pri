@@ -27,7 +27,7 @@ unix:!macx: create_kiss_archives.extra = cd ../root; \
 		
 win32: create_kiss_archives.extra = cd ../root; \
 	find targets/$${NAME} -type f > contents; \
-	../$${KISS}/deploy/KISS --createArchive $${NAME} $${VER} win contents $${NAME}_target_win.kiss; \
+	$${KISS}/deploy/KISS --createArchive $${NAME} $${VER} win contents $${NAME}_target_win.kiss; \
 	rm contents; \
 	cd - > /dev/null
 

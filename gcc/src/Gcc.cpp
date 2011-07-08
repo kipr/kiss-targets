@@ -36,11 +36,11 @@
 Gcc::Gcc()
 {
 #ifdef Q_OS_WIN32
-	m_gccPath = QDir::currentPath() + "/targets/gcc/mingw/bin/g++.exe";
+	m_gccPath = QDir::currentPath() + "/targets/gcc/mingw/bin/gcc.exe";
 #elif defined(Q_OS_MAC)
-  m_gccPath="/usr/bin/g++";
+	m_gccPath="/usr/bin/gcc";
 #else
-	m_gccPath="/usr/bin/g++";
+	m_gccPath="/usr/bin/gcc";
 #endif
 
 	QFileInfo gccExecutable(m_gccPath);
@@ -123,11 +123,8 @@ bool Gcc::run(const QString& filename, const QString& port)
 }
 
 DebuggerInterface* Gcc::debug(const QString& filename, const QString& port)
-{
-	if(!compile(filename, port, true)) 
-		return 0;
-		
-	return new Gdb(m_outputFileName);
+{	
+	return compile(filename, port, true) ? new Gdb(m_outputFileName) : 0;
 }
 
 void Gcc::processCompilerOutput()
@@ -224,8 +221,8 @@ void Gcc::refreshSettings()
 	
 #ifdef Q_OS_MAC
 	if(QSysInfo::MacintoshVersion == QSysInfo::MV_TIGER) {
-    m_cflags << "-isysroot" << "/Developer/SDKs/MacOSX10.4u.sdk";
-    m_lflags << "-isysroot" << "/Developer/SDKs/MacOSX10.4u.sdk";
+		m_cflags << "-isysroot" << "/Developer/SDKs/MacOSX10.4u.sdk";
+		m_lflags << "-isysroot" << "/Developer/SDKs/MacOSX10.4u.sdk";
 	}
 #endif
 }
@@ -273,9 +270,7 @@ bool Gcc::compile(const QString& filename, const QString& port, bool debug)
 	QFile objectFile(objectName);
 	if(!debug) objectFile.remove();
 
-	if(m_gcc.exitCode() == 0)
-		return true;
-	return false;
+	return m_gcc.exitCode() == 0;
 }
 
 Q_EXPORT_PLUGIN2(gcc_plugin, Gcc);
