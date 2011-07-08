@@ -18,7 +18,7 @@ QMAKE_DISTCLEAN += build/obj build/moc build/ui build/rcc build
 TEMPLATE = lib
 CONFIG += plugin
 unix: INCLUDEPATH += $${KISS}/include
-win32: INCLUDEPATH += ../$${KISS}/include
+win32: INCLUDEPATH += ../$${KISS}/include .
 
 CONFIG -= debug debug_and_release
 CONFIG += staticlib release
