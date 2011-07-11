@@ -21,6 +21,10 @@
 #ifndef __KISS_COMPAT_H__
 #define __KISS_COMPAT_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <GL/GLee.h>
 #include <GL/glfw.h>
 
@@ -58,6 +62,10 @@ void kiss_srandom(int seed);
 
 #define srand(x) kiss_srandom(x)
 #define srandom(x) kiss_srandom(x)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

@@ -3,6 +3,9 @@
 #ifndef KISSSIMH
 #define KISSSIMH
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifndef NOGRAPHICSSIMULATOR
 extern int __ks_flg;
@@ -191,6 +194,10 @@ extern int gc_song_array[16][33]; // This is a global used to load and play song
 
 void target_cha_in_chb(int, int, int*, int*);
 void set_digital_port_direction(int, int);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

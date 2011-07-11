@@ -21,6 +21,10 @@
 #ifndef __KISS_SERIAL_H__
 #define __KISS_SERIAL_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef BAUD_9600
 #define BAUD_9600 2604
 #endif
@@ -55,7 +59,9 @@ int  serial_ioflush(int handle);
 void serial_writeb(int handle, unsigned char byte);
 unsigned char serial_readb(int handle);
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

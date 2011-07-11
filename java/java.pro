@@ -37,18 +37,10 @@ POST_TARGETDEPS += $$lib_dir.target $$include_dir.target
 # Install proper target file #
 ##############################
 
-macx: java_TARGET_SOURCE = java.target.mac
-unix:!macx: java_TARGET_SOURCE = java.target.linux
-win32: java_TARGET_SOURCE = java.target.windows
-
 java-target.target = java-target
 java-target.depends = java-target-file
 
 java-target-file.target = java.target
-java-target-file.commands = cp $${java_TARGET_SOURCE} java.target
-java-target-file.depends = java-target-source
-
-java-target-source.target = $${java_TARGET_SOURCE}
 
 QMAKE_EXTRA_TARGETS += java-target java-target-file java-target-source
 
@@ -60,14 +52,25 @@ QMAKE_CLEAN += java.target
 # Install Directives #
 ######################
 
-GCC_TARGET_FILE_INSTALL = ../$${INSTALL_BASE}/targets/java/java.target
+JAVA_TARGET_FILE_INSTALL = ../$${INSTALL_BASE}/targets/java/java.target
 
 target_base.files = java.api template.c
 target_base.path = ../$${INSTALL_BASE}/targets/java
-target_base.extra = cp java.target $${GCC_TARGET_FILE_INSTALL}
+target_base.extra = cp java.target $${JAVA_TARGET_FILE_INSTALL}
+target_lib.files = lib/CBCJVM.jar
+target_lib.path = ../$${INSTALL_BASE}/targets/java/lib
 
 target.path = ../$${INSTALL_BASE}/targets/java
 
-INSTALLS += target target_base
+INSTALLS += target target_base target_lib
+
+#############
+# Templates #
+#############
+
+templates.path = ../$${INSTALL_BASE}/targets/java
+templates.extra = rm -Rf ../$${INSTALL_BASE}/targets/java/templates; cp -r templates ../$${INSTALL_BASE}/targets/java/templates
+
+INSTALLS += templates
 
 include (../install.pri)

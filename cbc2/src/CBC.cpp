@@ -37,13 +37,15 @@ CBC::CBC()
 {
 #ifdef Q_OS_WIN32
 	m_gccPath = QDir::currentPath() + "/targets/gcc/mingw/bin/gcc.exe";
+	m_gppPath = QDir::currentPath() + "/targets/gcc/mingw/bin/g++.exe";
 #else
 	m_gccPath="/usr/bin/gcc";
+	m_gppPath="/usr/bin/g++";
 #endif
 
-	QFileInfo gccExecutable(m_gccPath);
-	if(!gccExecutable.exists()) QMessageBox::critical(0, "Error", "Could not find gcc Executable!");
-
+	if(!QFileInfo(m_gccPath).exists()) QMessageBox::critical(0, "Error", "Could not find gcc Executable!");
+	if(!QFileInfo(m_gppPath).exists()) QMessageBox::critical(0, "Error", "Could not find g++ Executable!");
+	
 	m_gcc.setReadChannel(QProcess::StandardError);
 	
 //FIXME This is ugly
@@ -168,16 +170,13 @@ bool CBC::simulate(const QString& filename, const QString& port)
 }
 
 DebuggerInterface* CBC::debug(const QString& filename, const QString& port)
-{
-	if(!compile(filename, port, true)) 
-		return 0;
-		
-	return new Gdb(m_outputFileName);
+{		
+	return compile(filename, port, true) ? new Gdb(m_outputFileName) : 0;
 }
 
 void CBC::processCompilerOutput()
 {
-	bool foundError=false,foundWarning=false;
+	bool foundError = false, foundWarning = false;
 	m_errorMessages.clear();
 	m_warningMessages.clear();
 	m_verboseMessages.clear();
@@ -269,8 +268,8 @@ void CBC::refreshSettings()
 
 #ifdef Q_OS_MAC
 	if(QSysInfo::MacintoshVersion == QSysInfo::MV_TIGER) {
-    m_cflags << "-isysroot" << "/Developer/SDKs/MacOSX10.4u.sdk";
-    m_lflags << "-isysroot" << "/Developer/SDKs/MacOSX10.4u.sdk";
+		m_cflags << "-isysroot" << "/Developer/SDKs/MacOSX10.4u.sdk";
+		m_lflags << "-isysroot" << "/Developer/SDKs/MacOSX10.4u.sdk";
 	}
 #endif
 }
@@ -313,7 +312,7 @@ bool CBC::compile(const QString& filename, const QString& port, bool debug)
 	args << "-o" << m_outputFileName << objectName;
 	args << m_lflags;
 	qWarning() << "Linker Args:" << args;
-	m_gcc.start(m_gccPath, args);
+	m_gcc.start((sourceInfo.completeSuffix() == "cpp") ? m_gppPath : m_gccPath, args);
 	m_gcc.waitForFinished();
 	processLinkerOutput();
 

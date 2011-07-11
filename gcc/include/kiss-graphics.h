@@ -21,6 +21,10 @@
 #ifndef __KISS_GRAPHICS_H__
 #define __KISS_GRAPHICS_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <GL/GLee.h>
 #include <GL/glfw.h>
 
@@ -41,6 +45,10 @@ void graphics_rectangle_fill(int x1, int y1, int x2, int y2, int r, int g, int b
 
 void graphics_triangle(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b);
 void graphics_triangle_fill(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

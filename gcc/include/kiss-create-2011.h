@@ -38,6 +38,10 @@ Written by David Miller, 4/07
 #ifndef __CREATE_LIB_H__
 #define __CREATE_LIB_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <kiss-serial.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -1492,5 +1496,9 @@ void create_pwm_low_side_drivers(int pwm2, int pwm1, int pwm0)
 	
 	
 	/* END CreateLib.c */
+	
+	#ifdef __cplusplus
+	}
+	#endif
 	
 	#endif

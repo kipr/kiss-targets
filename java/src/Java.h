@@ -44,7 +44,7 @@ public:
 	bool run(const QString& filename, const QString& port);
 	void stop(const QString&) {}
 	bool download(const QString&, const QString&);
-	bool simulate(const QString&, const QString&) {return false;}
+	bool simulate(const QString&, const QString&) { return false; }
 	DebuggerInterface* debug(const QString&, const QString&) { return 0; }
 
 	bool hasCompile() 	{ return true; }

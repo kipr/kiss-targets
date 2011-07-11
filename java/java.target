@@ -1,6 +1,6 @@
 [General]
-description=Calls the local Java compiler
-display_name=Local Java
+description=Use CBCJVM
+display_name=CBCJVM
 extensions=Java Sources (*.java)
 manual=targets/java/manual/javamanual.html
 name=java

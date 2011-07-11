@@ -21,6 +21,9 @@
 #ifndef __KISS_INPUT_H__
 #define __KISS_INPUT_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //These are just re-named from the glfw.h file for uniformity
 
@@ -116,5 +119,9 @@ int  kiss_get_mouse_button(int button);
 int  kiss_get_mouse_wheel();
 void kiss_grab_mouse();
 void kiss_release_mouse();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

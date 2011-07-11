@@ -251,6 +251,7 @@ bool Gcc::compile(const QString& filename, const QString& port, bool debug)
 	p.replace("\\", "\\\\");
 	args << "-DDEFAULT_SERIAL_PORT=\"" + p + "\"";
 	args << "-c" << filename << "-o" << objectName;
+	
 	if(debug) args << "-g" << "-pg";
 	m_gcc.start(m_gccPath, args);
 	m_gcc.waitForFinished();
@@ -261,6 +262,7 @@ bool Gcc::compile(const QString& filename, const QString& port, bool debug)
 		return false;
 
 	args.clear();
+	if(sourceInfo.completeSuffix() == "cpp") args << "-lstdc++";
 	args << "-o" << m_outputFileName << objectName;
 	args << m_lflags;
 	m_gcc.start(m_gccPath, args);
