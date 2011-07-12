@@ -39,7 +39,7 @@ Java::Java()
 	const QStringList& jdks = javaInstall.entryList(QStringList() << "jdk*", QDir::Dirs | QDir::NoDotAndDotDot);
 	javaInstall.cd(jdks[0]);
 	javaInstall.cd("bin");
-	m_javaPath = javaInstall.filePath("javac");
+	m_javaPath = javaInstall.filePath("javac.exe");
 #else
 	m_javaPath="/usr/bin/javac";
 #endif
