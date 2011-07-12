@@ -46,8 +46,6 @@ QMAKE_EXTRA_TARGETS += java-target java-target-file java-target-source
 
 POST_TARGETDEPS += java-target
 
-QMAKE_CLEAN += java.target
-
 ######################
 # Install Directives #
 ######################
