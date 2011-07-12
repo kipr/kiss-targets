@@ -92,7 +92,7 @@ bool Java::run(const QString& filename, const QString& port)
 #ifdef Q_OS_WIN32
 	scriptFile.setFileName(QDir::temp().absoluteFilePath("kiprBatchFile.cmd"));
 	outputString += "@echo off\n";
-	outputString += "java \"" + QDir::toNativeSeparators(outputFileInfo.absolutePath()) + "\\" + outputFileInfo.fileName() + "\"\n";
+	outputString += "java \"" + QDir::toNativeSeparators(outputFileInfo.absolutePath()) + "\\" + outputFileInfo.baseName() + "\"\n";
 	outputString +=  "pause\n";
 #else
 	scriptFile.setFileName(QDir::temp().absoluteFilePath("kiprScript.sh"));
