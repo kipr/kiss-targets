@@ -34,11 +34,18 @@
 
 Java::Java()
 {
+#ifdef Q_OS_WIN
+	QDir javaInstall("C:/Program Files/Java/");
+	const QStringList& jdks = javaInstall.entryList(QStringList() << "jdk*", QDir::Dirs | QDir::NoDotAndDotDot);
+	javaInstall.cd(jdks[0]);
+	javaInstall.cd("bin");
+	m_javaPath = javaInstall.filePath("javac");
+#else
 	m_javaPath="/usr/bin/javac";
+#endif
 
 	QFileInfo JavaExecutable(m_javaPath);
-	if(!JavaExecutable.exists())
-		QMessageBox::critical(0, "Error", "Could not find Java Executable!");
+	if(!JavaExecutable.exists()) QMessageBox::critical(0, "Error", "Could not find Java Executable!");
 
 	m_java.setReadChannel(QProcess::StandardError);
 
