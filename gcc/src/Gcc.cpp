@@ -258,8 +258,7 @@ bool Gcc::compile(const QString& filename, const QString& port, bool debug)
 	processCompilerOutput();
 	m_linkerMessages.clear();
 
-	if(m_gcc.exitCode() != 0)
-		return false;
+	if(m_gcc.exitCode() != 0) return false;
 
 	args.clear();
 	if(sourceInfo.completeSuffix() == "cpp") args << "-lstdc++";

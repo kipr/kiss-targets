@@ -70,10 +70,7 @@ bool Java::compile(const QString& filename, const QString& port)
 	processCompilerOutput();
 	m_linkerMessages.clear();
 
-	if(m_java.exitCode() != 0)
-		return false;
-
-	return true;
+	return m_java.exitCode() == 0;
 }
 
 bool Java::run(const QString& filename, const QString& port)
@@ -145,7 +142,7 @@ bool Java::download(const QString& filename, const QString& port)
 
 void Java::processCompilerOutput()
 {
-	bool foundError=false,foundWarning=false;
+	bool foundError = false, foundWarning = false;
 	m_errorMessages.clear();
 	m_warningMessages.clear();
 	m_verboseMessages.clear();
@@ -167,29 +164,22 @@ void Java::processCompilerOutput()
 			outputLine += inputLine.section(':',1,1) + ":";
 			outputLine += inputLine.section(':',2,2).remove(' ') + ":";
 			outputLine += inputLine.section(':', 3);
-		}
-		else
-			outputLine += inputLine.section(':', 1);
+		} else outputLine += inputLine.section(':', 1);
 
 		if(outputLine.section(':',2,2) == "error") {
 			m_errorMessages << outputLine;
 			foundError=true;
-		}
-		else if(outputLine.section(':', 2,2) == "warning") {
+		} else if(outputLine.section(':', 2,2) == "warning") {
 			m_warningMessages << outputLine;
 			foundWarning=true;
-		}
-		else {
+		} else {
 			m_errorMessages << inputLine;
 			m_warningMessages << inputLine;
 		}
 	}
-	if(!foundError && !foundWarning)
-		m_warningMessages.clear();
-	else if(!foundError)
-		m_errorMessages.clear();
-	else if(!foundWarning)
-		m_warningMessages.clear();
+	if(!foundError && !foundWarning) m_warningMessages.clear();
+	else if(!foundError) m_errorMessages.clear();
+	else if(!foundWarning) m_warningMessages.clear();
 }
 
 void Java::refreshSettings()

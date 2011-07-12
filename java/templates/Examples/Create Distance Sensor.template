@@ -17,7 +17,6 @@ public class Main {
 	
 	//****************************
 	//*** Begin actual program ***
-	
 	public static class StartListener implements IEventListener {
 		
 		ETSensor distSensor;
@@ -38,11 +37,6 @@ public class Main {
 			dt.moveCm(-dist*.5+5., dt.getMaxCmps()*.5);
 			dist = distSensor.getCm(50, 10);
 			dt.moveCm(-dist+5., dt.getMaxCmps()*.5);
-			
-			/*while(true) {
-				System.out.println(""+distSensor.getValueHigh());
-				try { Thread.sleep(200); } catch(Exception ex) { return; }
-			}*/
 		}
 	}
 }

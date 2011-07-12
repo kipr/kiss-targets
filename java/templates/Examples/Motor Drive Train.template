@@ -4,7 +4,6 @@ import cbccore.easing.*;
 public class Main {
 	public static void main(String [] args) {
 		MotorDriveTrain dt = new MotorDriveTrain(new Wheel(0, 15.5744, 1.), new Wheel(1, 15.5744, 1.), 11.);
-		//dt.moveCm(100., dt.getMaxCmps());
 		
 		try {
 		dt.moveCm(-300., dt.getMaxCmps(), 100,
@@ -21,6 +20,5 @@ public class Main {
 		} catch(Exception e) {
 			e.printStackTrace(System.out);
 		}
-		//dt.moveCurveRadians(20., 100., dt.getMaxCmps(100.));
 	}
 }

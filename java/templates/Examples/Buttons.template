@@ -8,15 +8,9 @@ import cbccore.events.EventListenerAdapter;
 import cbccore.sensors.buttons.ButtonEmitter;
 
 public class Main {
-	
-	
-	
 	public void run() {
 		EventManager manager = EventManager.get();
 		ButtonEmitter.get().start();
-		
-		
-		
 		
 		EventListenerAdapter AButtonPressedHandler = new EventListenerAdapter() {
 			@Override
@@ -36,11 +30,7 @@ public class Main {
 		manager.connect(ButtonEmitter.AButtonReleased, AButtonReleasedHandler);
 	}
 	
-	
-	
-	
 	public static void main(String[] args) {
-		//Device.init();
 		new Main().run();
 	}
 }

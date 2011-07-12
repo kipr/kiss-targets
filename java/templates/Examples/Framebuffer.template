@@ -16,8 +16,6 @@ public class Main {
 		int x = 160 - r.getWidth() / 2;
 		int y = 120 - r.getHeight() / 2;
 		int dir = 0;
-		Image image = new Image(new File("cbcdl.bin"));
-		ImagePixmap cbc = new ImagePixmap(image);
 		Drawer drawer = new Drawer(fb0);
 		int rotatingLineSize = 240;
 		Pixmap rotatingLineFiller = new Pixmap(rotatingLineSize, rotatingLineSize, new Pixel(0, 0, 0));
@@ -47,7 +45,6 @@ public class Main {
 				Pixel.whitePixel
 			);
 			angle += .1f;
-			fb0.fastBlit(0, 0, cbc);
 			fb0.fastBlit(x, 0, r);
 			fb0.fastBlit(x, 80, g);
 			fb0.fastBlit(x, 160, b);
