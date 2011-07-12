@@ -70,7 +70,7 @@ bool Java::compile(const QString& filename, const QString& port)
 	if(sourceInfo.lastModified() < outputInfo.lastModified())
 		return true;
 
-	args << "-cp" << "targets/java/lib/CBCJVM.jar" << filename;
+	args << "-cp" << QDir::toNativeSeparators("targets/java/lib/CBCJVM.jar") << filename;
 	qWarning() << args;
 	m_java.start(m_javaPath, args);
 	m_java.waitForFinished();
@@ -92,7 +92,8 @@ bool Java::run(const QString& filename, const QString& port)
 #ifdef Q_OS_WIN32
 	scriptFile.setFileName(QDir::temp().absoluteFilePath("kiprBatchFile.cmd"));
 	outputString += "@echo off\n";
-	outputString += "java \"" + QDir::toNativeSeparators(outputFileInfo.absolutePath()) + "\\" + outputFileInfo.baseName() + "\"\n";
+	outputString += "cd \"" + QDir::toNativeSeparators(outputFileInfo.absolutePath()) + "\"\n";
+	outputString += "java -cp . \"" + outputFileInfo.baseName() + "\"\n";
 	outputString +=  "pause\n";
 #else
 	scriptFile.setFileName(QDir::temp().absoluteFilePath("kiprScript.sh"));
