@@ -35,6 +35,7 @@
 Java::Java()
 {
 #ifdef Q_OS_WIN
+	// This code finds the jdk directory, which doesn't really have a standard naming convention
 	QDir javaInstall("C:/Program Files/Java/");
 	const QStringList& jdks = javaInstall.entryList(QStringList() << "jdk*", QDir::Dirs | QDir::NoDotAndDotDot);
 	if(!jdks.isEmpty()) javaInstall.cd(jdks[0]);

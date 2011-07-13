@@ -33,19 +33,6 @@ lib_dir.commands = mkdir -p lib
 QMAKE_EXTRA_TARGETS += lib_dir include_dir
 POST_TARGETDEPS += $$lib_dir.target $$include_dir.target
 
-##############################
-# Install proper target file #
-##############################
-
-java-target.target = java-target
-java-target.depends = java-target-file
-
-java-target-file.target = java.target
-
-QMAKE_EXTRA_TARGETS += java-target java-target-file java-target-source
-
-POST_TARGETDEPS += java-target
-
 ######################
 # Install Directives #
 ######################

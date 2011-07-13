@@ -32,29 +32,6 @@ include_dir.commands = mkdir -p include
 QMAKE_EXTRA_TARGETS += lib_dir include_dir
 POST_TARGETDEPS += $$lib_dir.target $$include_dir.target
 
-##############################
-# Install proper target file #
-##############################
-
-macx: CBC_TARGET_SOURCE = cbc2.target.mac
-unix:!macx: CBC_TARGET_SOURCE = cbc2.target.linux
-win32: CBC_TARGET_SOURCE = cbc2.target.windows
-
-cbc-target.target = cbc-target
-cbc-target.depends = cbc-target-file
-
-cbc-target-file.target = cbc2.target
-cbc-target-file.commands = $${COPY} $${CBC_TARGET_SOURCE} cbc2.target
-cbc-target-file.depends = cbc-target-source
-
-cbc-target-source.target = $${CBC_TARGET_SOURCE}
-
-QMAKE_EXTRA_TARGETS += cbc-target cbc-target-file cbc-target-source
-
-POST_TARGETDEPS += cbc-target
-
-QMAKE_CLEAN += cbc2.target
-
 ######################
 # Install Directives #
 ######################

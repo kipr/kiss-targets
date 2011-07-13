@@ -33,28 +33,6 @@ include_dir.commands = mkdir -p include/GL
 QMAKE_EXTRA_TARGETS += lib_dir include_dir
 POST_TARGETDEPS += $$lib_dir.target $$include_dir.target
 
-##############################
-# Install proper target file #
-##############################
-macx: GCC_TARGET_SOURCE = gcc.target.mac
-unix:!macx: GCC_TARGET_SOURCE = gcc.target.linux
-win32: GCC_TARGET_SOURCE = gcc.target.windows
-
-gcc-target.target = gcc-target
-gcc-target.depends = gcc-target-file
-
-gcc-target-file.target = gcc.target
-gcc-target-file.commands = $${COPY} $${GCC_TARGET_SOURCE} gcc.target
-gcc-target-file.depends = gcc-target-source
-
-gcc-target-source.target = $${GCC_TARGET_SOURCE}
-
-QMAKE_EXTRA_TARGETS += gcc-target gcc-target-file gcc-target-source
-
-POST_TARGETDEPS += gcc-target
-
-QMAKE_CLEAN += gcc.target
-
 ########
 # glfw #
 ########
@@ -92,11 +70,11 @@ glee.target = glee
 glee.depends = glee-lib glee-header
 
 glee-lib.target = $${GLEE_LIB_DEST}
-glee-lib.commands = $${COPY} $${GLEE_LIB} $${GLEE_LIB_DEST}
+glee-lib.commands = cp $${GLEE_LIB} $${GLEE_LIB_DEST}
 glee-lib.depends = $${GLEE_LIB}
 
 glee-header.target = $${GLEE_HEADER_DEST}
-glee-header.commands = $${COPY} $${GLEE_HEADER} $${GLEE_HEADER_DEST}
+glee-header.commands = cp $${GLEE_HEADER} $${GLEE_HEADER_DEST}
 glee-header.depends = $${GLEE_HEADER}
 
 QMAKE_EXTRA_TARGETS += glee glee-lib glee-header
@@ -186,7 +164,7 @@ QMAKE_CLEAN += $${CREATE_HEADER_DEST}
 ######################
 GCC_TARGET_FILE_INSTALL = ../$${INSTALL_BASE}/targets/gcc/gcc.target
 
-target_base.files = gcc.api template.c
+target_base.files = gcc.api
 target_base.path = ../$${INSTALL_BASE}/targets/gcc
 target_base.extra = cp gcc.target $${GCC_TARGET_FILE_INSTALL}
 
@@ -201,9 +179,7 @@ target_include.path = ../$${INSTALL_BASE}/targets/gcc/include
 target_gl.files = ../external/include/GL/glfw.h ../external/include/GL/GLee.h
 target_gl.path = ../$${INSTALL_BASE}/targets/gcc/include/GL
 
-target_lib.files = ../external/lib/libglfw.a \
-				   ../external/lib/libGLee.a \
-				   ../libraries/kiss/libkiss.a
+target_lib.files = lib/libglfw.a lib/libGLee.a lib/libkiss.a
 target_lib.path = ../$${INSTALL_BASE}/targets/gcc/lib
 
 target.path = ../$${INSTALL_BASE}/targets/gcc

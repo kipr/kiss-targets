@@ -4,11 +4,22 @@ display_name=This Machine
 extensions=C Sources (*.c *.h)|C++ Sources (*.cpp *.h *.hpp)
 manual=targets/gcc/manual/gccmanual.html
 name=gcc
-template=targets/gcc/template.c
 default_extension=c
 
-[Target]
+[win]
+cflags=-Wimplicit
+include_dirs=targets/gcc/include
+lflags=-lkiss -lglfw -lGLee -lopengl32
+lib_dirs=targets/gcc/lib
+
+[osx]
 cflags=-arch i386 -Wimplicit
 include_dirs=targets/gcc/include
 lflags=-arch i386 -lGLee -lkiss -lpthread -lm -lglfw -framework AGL -framework OpenGL -framework Carbon
+lib_dirs=targets/gcc/lib
+
+[nix]
+cflags=-Wimplicit
+include_dirs=targets/gcc/include
+lflags=-lkiss -lglfw -lGL -lXrandr -lpthread
 lib_dirs=targets/gcc/lib

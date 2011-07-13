@@ -4,7 +4,6 @@ display_name=CBCJVM
 extensions=Java Sources (*.java)
 manual=targets/java/manual/javamanual.html
 name=java
-template=targets/java/template.java
 default_extension=java
 port_dialog=true
 

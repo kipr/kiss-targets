@@ -33,6 +33,8 @@
 #include <QDateTime>
 #include <QDebug>
 
+#include "Os.h"
+
 CBC::CBC()
 {
 #ifdef Q_OS_WIN32
@@ -242,29 +244,23 @@ void CBC::refreshSettings()
 	m_cflags.clear();
 	m_lflags.clear();
 
-	include_dirs = settings.value("Target/include_dirs").toString().split(' ', QString::SkipEmptyParts);
-	lib_dirs = settings.value("Target/lib_dirs").toString().split(' ', QString::SkipEmptyParts);
+	include_dirs = settings.value(QString(OS_NAME) + "/include_dirs").toString().split(' ', QString::SkipEmptyParts);
+	lib_dirs = settings.value(QString(OS_NAME) + "/lib_dirs").toString().split(' ', QString::SkipEmptyParts);
 
 	QStringListIterator i(include_dirs);
 	while(i.hasNext()) {
 		QDir includePath(i.next());
-		if(includePath.isAbsolute())
-			m_cflags << "-I" + includePath.path();
-		else
-			m_cflags << "-I" + QDir::currentPath() + "/" + includePath.path();
+		m_cflags << "-I" + (!includePath.isAbsolute() ? (QDir::currentPath() + "/") : "") + includePath.path();
 	}
 
 	i = lib_dirs;
 	while(i.hasNext()) {
 		QDir libPath(i.next());
-		if(libPath.isAbsolute())
-			m_lflags << "-L" + libPath.path();
-		else
-			m_lflags << "-L" + QDir::currentPath() + "/" + libPath.path();
+		m_lflags << "-L" + (!libPath.isAbsolute() ? (QDir::currentPath() + "/") : "") + libPath.path();
 	}
 
-	m_cflags << settings.value("Target/cflags").toString().split(' ', QString::SkipEmptyParts);
-	m_lflags << settings.value("Target/lflags").toString().split(' ', QString::SkipEmptyParts);
+	m_cflags << settings.value(QString(OS_NAME) + "/cflags").toString().split(' ', QString::SkipEmptyParts);
+	m_lflags << settings.value(QString(OS_NAME) + "/lflags").toString().split(' ', QString::SkipEmptyParts);
 
 #ifdef Q_OS_MAC
 	if(QSysInfo::MacintoshVersion == QSysInfo::MV_TIGER) {
