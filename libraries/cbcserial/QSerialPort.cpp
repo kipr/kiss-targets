@@ -33,6 +33,7 @@
 
 #include <unistd.h>
 #include <string.h>
+#include <QSettings>
 
 
 QSerialPort::QSerialPort(QString filename, QObject *parent) : QIODevice(parent), 
@@ -52,53 +53,60 @@ QSerialPort::~QSerialPort()
 
 bool QSerialPort::open(OpenMode)
 {
-    #ifdef WIN32
-    COMMTIMEOUTS cto;
-    char realPortname[10];
-    memset(realPortname, 0, 10);
-    strncpy(realPortname, "\\\\.\\", 4);
-    strncpy(realPortname+4, m_name.toLocal8Bit(), 5);
-    
-    m_handle = CreateFileA(realPortname, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, 0);
-    
-    if(m_handle == INVALID_HANDLE_VALUE)
-            return false;
-            
-    cto.ReadIntervalTimeout = 500;
-    cto.ReadTotalTimeoutMultiplier = 0;
-    cto.ReadTotalTimeoutConstant = 500;
-    cto.WriteTotalTimeoutMultiplier = 0;
-    cto.WriteTotalTimeoutConstant = 0;
-    
-    if(!SetCommTimeouts(m_handle, &cto)) {
-        CloseHandle(m_handle);
-        m_handle = INVALID_HANDLE_VALUE;
-        return false;
-    }
-    
-    if(!SetupComm(m_handle, 2048, 2048)) {
-        CloseHandle(m_handle);
-        m_handle = INVALID_HANDLE_VALUE;
-        return false;
-    }
-    
-    if(!SetCommMask(m_handle, 0)) {
-        CloseHandle(m_handle);
-        m_handle = INVALID_HANDLE_VALUE;
-        return false;
-    }
-    configurePort();
-    return QIODevice::open(ReadWrite);
-    #else
-    m_handle = ::open(m_name.toLocal8Bit(), O_RDWR | O_NDELAY | O_NOCTTY);
-    
-    if(m_handle > 0) {
-        ::fcntl(m_handle, F_SETFL, ~O_NDELAY & ::fcntl(m_handle, F_GETFL, 0));
-        configurePort();
-        return QIODevice::open(ReadWrite);
-    }
-    #endif
-    return false;
+	#ifdef WIN32
+	COMMTIMEOUTS cto;
+	char realPortname[10];
+	memset(realPortname, 0, 10);
+	strncpy(realPortname, "\\\\.\\", 4);
+	strncpy(realPortname+4, m_name.toLocal8Bit(), 5);
+
+	m_handle = CreateFileA(realPortname, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, 0);
+
+	if(m_handle == INVALID_HANDLE_VALUE) return false;
+
+	QSettings timeouts("timeouts.ini", QSettings::IniFormat);
+	cto.ReadIntervalTimeout = timeouts.value("ReadIntervalTimeout", 500).toInt();
+	cto.ReadTotalTimeoutMultiplier = timeouts.value("ReadTotalTimeoutMultiplier", 0).toInt();;
+	cto.ReadTotalTimeoutConstant = timeouts.value("ReadTotalTimeoutConstant", 0).toInt();;
+	cto.WriteTotalTimeoutMultiplier = timeouts.value("WriteTotalTimeoutMultiplier", 0).toInt();;
+	cto.WriteTotalTimeoutConstant = timeouts.value("WriteTotalTimeoutContant", 0).toInt();;
+	timeouts.sync();
+	
+	qWarning() << "ReadIntervalTimeout" << cto.ReadIntervalTimeout;
+	qWarning() << "ReadTotalTimeoutMultiplier" << cto.ReadTotalTimeoutMultiplier;
+	qWarning() << "ReadTotalTimeoutConstant" << cto.ReadTotalTimeoutConstant;
+	qWarning() << "WriteTotalTimeoutMultiplier" << cto.WriteTotalTimeoutMultiplier;
+	qWarning() << "WriteTotalTimeoutContant" << cto.WriteTotalTimeoutConstant;
+
+	if(!SetCommTimeouts(m_handle, &cto)) {
+		CloseHandle(m_handle);
+		m_handle = INVALID_HANDLE_VALUE;
+		return false;
+	}
+
+	if(!SetupComm(m_handle, 2048, 2048)) {
+		CloseHandle(m_handle);
+		m_handle = INVALID_HANDLE_VALUE;
+		return false;
+	}
+
+	if(!SetCommMask(m_handle, 0)) {
+		CloseHandle(m_handle);
+		m_handle = INVALID_HANDLE_VALUE;
+		return false;
+	}
+	configurePort();
+	return QIODevice::open(ReadWrite);
+	#else
+	m_handle = ::open(m_name.toLocal8Bit(), O_RDWR | O_NDELAY | O_NOCTTY);
+
+	if(m_handle > 0) {
+		::fcntl(m_handle, F_SETFL, ~O_NDELAY & ::fcntl(m_handle, F_GETFL, 0));
+		configurePort();
+		return QIODevice::open(ReadWrite);
+	}
+	#endif
+	return false;
 }
 
 void QSerialPort::setPort(QString port)

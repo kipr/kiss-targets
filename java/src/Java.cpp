@@ -37,7 +37,7 @@ Java::Java()
 #ifdef Q_OS_WIN
 	QDir javaInstall("C:/Program Files/Java/");
 	const QStringList& jdks = javaInstall.entryList(QStringList() << "jdk*", QDir::Dirs | QDir::NoDotAndDotDot);
-	javaInstall.cd(jdks[0]);
+	if(!jdks.isEmpty()) javaInstall.cd(jdks[0]);
 	javaInstall.cd("bin");
 	m_javaPath = javaInstall.filePath("javac.exe");
 #else
