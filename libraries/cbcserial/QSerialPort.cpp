@@ -33,7 +33,6 @@
 
 #include <unistd.h>
 #include <string.h>
-#include <QSettings>
 
 
 QSerialPort::QSerialPort(QString filename, QObject *parent) : QIODevice(parent), 
@@ -43,13 +42,9 @@ QSerialPort::QSerialPort(QString filename, QObject *parent) : QIODevice(parent),
                                                               #else 
                                                               m_handle(-1)
                                                               #endif
-{
-}
+{}
 
-QSerialPort::~QSerialPort()
-{
-    close();
-}
+QSerialPort::~QSerialPort() { close(); }
 
 bool QSerialPort::open(OpenMode)
 {
@@ -64,19 +59,11 @@ bool QSerialPort::open(OpenMode)
 
 	if(m_handle == INVALID_HANDLE_VALUE) return false;
 
-	QSettings timeouts("timeouts.ini", QSettings::IniFormat);
-	cto.ReadIntervalTimeout = timeouts.value("ReadIntervalTimeout", 500).toInt();
-	cto.ReadTotalTimeoutMultiplier = timeouts.value("ReadTotalTimeoutMultiplier", 0).toInt();;
-	cto.ReadTotalTimeoutConstant = timeouts.value("ReadTotalTimeoutConstant", 0).toInt();;
-	cto.WriteTotalTimeoutMultiplier = timeouts.value("WriteTotalTimeoutMultiplier", 0).toInt();;
-	cto.WriteTotalTimeoutConstant = timeouts.value("WriteTotalTimeoutContant", 0).toInt();;
-	timeouts.sync();
-	
-	qWarning() << "ReadIntervalTimeout" << cto.ReadIntervalTimeout;
-	qWarning() << "ReadTotalTimeoutMultiplier" << cto.ReadTotalTimeoutMultiplier;
-	qWarning() << "ReadTotalTimeoutConstant" << cto.ReadTotalTimeoutConstant;
-	qWarning() << "WriteTotalTimeoutMultiplier" << cto.WriteTotalTimeoutMultiplier;
-	qWarning() << "WriteTotalTimeoutContant" << cto.WriteTotalTimeoutConstant;
+	cto.ReadIntervalTimeout = 10; // This value has been set arbitrarily
+	cto.ReadTotalTimeoutMultiplier = 0;
+	cto.ReadTotalTimeoutConstant = 0;
+	cto.WriteTotalTimeoutMultiplier = 0;
+	cto.WriteTotalTimeoutConstant = 0;
 
 	if(!SetCommTimeouts(m_handle, &cto)) {
 		CloseHandle(m_handle);
@@ -109,119 +96,107 @@ bool QSerialPort::open(OpenMode)
 	return false;
 }
 
-void QSerialPort::setPort(QString port)
-{
-    m_name = port;
-}
+void QSerialPort::setPort(QString port) { m_name = port; }
 
 void QSerialPort::close()
 {
 #ifdef WIN32
-    if(m_handle != INVALID_HANDLE_VALUE) {
-        CloseHandle(m_handle);
-        m_handle = INVALID_HANDLE_VALUE;
-        QIODevice::close();
-    }
+	if(m_handle == INVALID_HANDLE_VALUE) return;
+
+	CloseHandle(m_handle);
+	m_handle = INVALID_HANDLE_VALUE;
+	QIODevice::close();
 #else
-     if(m_handle > 0) {
-        ::close(m_handle);
-        m_handle = -1;
-        QIODevice::close();
-    }
+	if(m_handle <= 0) return;
+	::close(m_handle);
+	m_handle = -1;
+	QIODevice::close();
 #endif
 }
 
 void QSerialPort::configurePort()
 {
 #ifdef WIN32
-    DCB dcb;
-    
-    memset(&dcb, sizeof(dcb), 0);
-    dcb.DCBlength = sizeof(dcb);
-    
-    if(!GetCommState(m_handle, &dcb))
-        return;
-    
-    dcb.DCBlength = sizeof(dcb);
-    dcb.BaudRate = 38400;
-    dcb.fBinary = 1;
-    dcb.fOutxCtsFlow = 0;
-    dcb.fOutxDsrFlow = 0;
-    dcb.fDtrControl = DTR_CONTROL_DISABLE;
-    dcb.fDsrSensitivity = 0;
-    dcb.fTXContinueOnXoff = 0;
-    dcb.fOutX = 0;
-    dcb.fInX = 0;
-    dcb.fErrorChar = 0;
-    dcb.fNull = 0;
-    dcb.fRtsControl = RTS_CONTROL_TOGGLE;
-    dcb.fAbortOnError = FALSE;
-    dcb.ByteSize = 8;
-    dcb.Parity = NOPARITY;
-    dcb.fParity = 0;
-    dcb.StopBits = ONESTOPBIT;
-    
-    SetCommState(m_handle, &dcb);
+	DCB dcb;
+
+	memset(&dcb, sizeof(dcb), 0);
+	dcb.DCBlength = sizeof(dcb);
+
+	if(!GetCommState(m_handle, &dcb)) return;
+
+	dcb.DCBlength = sizeof(dcb);
+	dcb.BaudRate = 38400;
+	dcb.fBinary = 1;
+	dcb.fOutxCtsFlow = 0;
+	dcb.fOutxDsrFlow = 0;
+	dcb.fDtrControl = DTR_CONTROL_DISABLE;
+	dcb.fDsrSensitivity = 0;
+	dcb.fTXContinueOnXoff = 0;
+	dcb.fOutX = 0;
+	dcb.fInX = 0;
+	dcb.fErrorChar = 0;
+	dcb.fNull = 0;
+	dcb.fRtsControl = RTS_CONTROL_TOGGLE;
+	dcb.fAbortOnError = FALSE;
+	dcb.ByteSize = 8;
+	dcb.Parity = NOPARITY;
+	dcb.fParity = 0;
+	dcb.StopBits = ONESTOPBIT;
+
+	SetCommState(m_handle, &dcb);
 
 #else
-    struct termios tio;
-    
-    tcgetattr(m_handle, &tio);
-    
-    tio.c_iflag = IGNBRK;
-    tio.c_oflag = 0;
-    tio.c_cflag = CREAD | CLOCAL | CS8;
-    tio.c_lflag = 0;
-    bzero(&tio.c_cc, sizeof(tio.c_cc));
-    
-    cfsetspeed(&tio, B38400);
-    
-    tcsetattr(m_handle, TCSADRAIN, &tio);
+	struct termios tio;
+
+	tcgetattr(m_handle, &tio);
+
+	tio.c_iflag = IGNBRK;
+	tio.c_oflag = 0;
+	tio.c_cflag = CREAD | CLOCAL | CS8;
+	tio.c_lflag = 0;
+	bzero(&tio.c_cc, sizeof(tio.c_cc));
+
+	cfsetspeed(&tio, B38400);
+
+	tcsetattr(m_handle, TCSADRAIN, &tio);
 #endif
 }
 
 qint64 QSerialPort::readData(char *data, qint64 maxSize)
 {
 #ifdef WIN32
-    if(m_handle != INVALID_HANDLE_VALUE) {
-        DWORD read_count = 0;
-        qWarning("ReadFile...");
-        if(!ReadFile(m_handle, data, maxSize, &read_count, NULL)) {
-            qWarning("Readfile failed...");
-            return 0;
-        }
-            qWarning("Readfile returned %d", read_count);
-        return read_count;
-    }
+	if(m_handle == INVALID_HANDLE_VALUE) return -1;
+	DWORD read_count = 0;
+	qWarning("ReadFile...");
+	if(!ReadFile(m_handle, data, maxSize, &read_count, NULL)) {
+		qWarning("Readfile failed...");
+		return 0;
+	}
+	qWarning("Readfile returned %d", read_count);
+	return read_count;
 #else
-    if(m_handle > 0) {
-        if(select(500)) {
-            int ret = ::read(m_handle, data, maxSize);
-            if(ret >= 0) return ret;
-        }
-        return 0;
-    }
-    return -1;
+	if(m_handle <= 0) return -1; 
+	if(select(500)) {
+		int ret = ::read(m_handle, data, maxSize);
+		if(ret >= 0) return ret;
+	}
+	return 0;
 #endif
+	
 }
 
 qint64 QSerialPort::writeData(const char *data, qint64 maxSize)
 {
 #ifdef WIN32
-    if(m_handle != INVALID_HANDLE_VALUE) {
-        DWORD write_count;
-        
-        if(!WriteFile(m_handle, data, maxSize, &write_count, NULL))
-            return 0;
-        return write_count;
-    }
+	if(m_handle == INVALID_HANDLE_VALUE) return -1;
+	DWORD write_count;
+	return !WriteFile(m_handle, data, maxSize, &write_count, NULL) ? 0 : write_count;
 #else
-    if(m_handle > 0) {
-        int ret = ::write(m_handle, data, maxSize);
-        if(ret >= 0) return ret;
-        if(ret == -EAGAIN) return 0;
-    }
-    return -1;
+	if(m_handle <= 0) return -1;
+	int ret = ::write(m_handle, data, maxSize);
+	if(ret >= 0) return ret;
+	if(ret == -EAGAIN) return 0;
+	return -1;
 #endif
 }
 
@@ -238,8 +213,7 @@ bool QSerialPort::select(int msecs)
     timeout.tv_usec = (msecs % 1000) * 1000;
     
     int n = ::select(m_handle + 1, &fds, 0, 0, &timeout);
-    
-    if(n == 1) return true;
-    return false;
+
+    return n == 1;
 }
 #endif
