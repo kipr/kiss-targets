@@ -179,7 +179,7 @@ target_include.path = ../$${INSTALL_BASE}/targets/gcc/include
 target_gl.files = ../external/include/GL/glfw.h ../external/include/GL/GLee.h
 target_gl.path = ../$${INSTALL_BASE}/targets/gcc/include/GL
 
-target_lib.files = lib/libglfw.a lib/libGLee.a lib/libkiss.a
+target_lib.files = ../external/lib/libglfw.a ../external/lib/libGLee.a ../libraries/kiss/libkiss.a
 target_lib.path = ../$${INSTALL_BASE}/targets/gcc/lib
 
 target.path = ../$${INSTALL_BASE}/targets/gcc
