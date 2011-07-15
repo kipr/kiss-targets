@@ -7,4 +7,3 @@ root/*
 *.dylib
 moc_*
 ui_*
-*.target
