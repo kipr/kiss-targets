@@ -300,7 +300,12 @@ bool CBC::compile(const QString& filename, const QString& port, bool debug)
 	p.replace("\\", "\\\\");
 	args << "-DDEFAULT_SERIAL_PORT=\"" + p + "\"";
 	args << "-c" << filename << "-o" << objectName;
-	if(debug) args << "-g" << "-pg";
+	if(debug) {
+		args << "-g";
+	#ifndef Q_OS_WIN
+		args << "-pg";
+	#endif
+	}
 	qWarning() << "Object Args:" << args;
 	m_gcc.start(m_gccPath, args);
 	m_gcc.waitForFinished();

@@ -254,7 +254,12 @@ bool Gcc::compile(const QString& filename, const QString& port, bool debug)
 	args << "-DDEFAULT_SERIAL_PORT=\"" + p + "\"";
 	args << "-c" << filename << "-o" << objectName;
 	
-	if(debug) args << "-g" << "-pg";
+	if(debug) {
+		args << "-g";
+	#ifndef Q_OS_WIN
+		args << "-pg";
+	#endif
+	}
 	m_gcc.start(m_gccPath, args);
 	m_gcc.waitForFinished();
 	processCompilerOutput();
