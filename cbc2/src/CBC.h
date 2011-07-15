@@ -27,8 +27,6 @@
 #include <QSettings>
 
 #include "TargetInterface.h"
-#include "LexerSpec.h"
-#include "LexerStyles.h"
 #include "SerialClient.h"
 
 class CBC : public QObject, public TargetInterface
