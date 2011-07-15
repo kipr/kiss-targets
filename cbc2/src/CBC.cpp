@@ -50,6 +50,12 @@ CBC::CBC()
 	
 	m_gcc.setReadChannel(QProcess::StandardError);
 	
+#ifdef Q_OS_WIN32
+	QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+	env.insert("PATH", env.value("Path") + ";" + QDir::toNativeSeparators(QDir::currentPath() + "/targets/gcc/mingw/bin"));
+	m_gcc.setProcessEnvironment(env);
+#endif
+	
 //FIXME This is ugly
 #ifdef Q_OS_MAC
 	system(("ranlib " + QDir::currentPath() + "/targets/cbc2/lib/*.a").toLocal8Bit());
