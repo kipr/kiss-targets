@@ -14,8 +14,10 @@ win32:TARGET = $$qtLibraryTarget(libcbc2_plugin)
 
 LIBS += -L../libraries/gdb -L../libraries/cbcserial -lgdb -lcbcserial
 
-HEADERS += CBC.h
-SOURCES += CBC.cpp
+HEADERS += CBC.h Controller.h
+SOURCES += CBC.cpp Controller.cpp
+FORMS += Controller.ui
+RESOURCES += rc/rc.qrc
 
 QMAKE_CLEAN += $(DESTDIR)/$(TARGET) src/*~
 

@@ -20,6 +20,7 @@
 
 #include "CBC.h"
 #include "Gdb.h"
+#include "Kiss.h"
 
 #include <QProcess>
 #include <QString>
@@ -32,8 +33,6 @@
 #include <QMessageBox>
 #include <QDateTime>
 #include <QDebug>
-
-#include "Kiss.h"
 
 CBC::CBC()
 {
@@ -68,10 +67,13 @@ CBC::~CBC()
 	m_outputBinary.kill();
 }
 
-bool CBC::compile(const QString& filename, const QString& port)
+bool CBC::compile(const QString& filename, const QString& port) { return compile(filename, port, false); }
+bool CBC::run(const QString& filename, const QString& port) 
 {
-	return compile(filename, port, false);
+	m_serial.setPort(port);
+	return m_serial.sendCommand(KISS_RUN_COMMAND);
 }
+void CBC::stop(const QString& port) { m_serial.setPort(port); m_serial.sendCommand(KISS_STOP_COMMAND); }
 
 QStringList CBC::getPaths(const QString& string)
 {
@@ -96,38 +98,42 @@ QStringList CBC::getPaths(const QString& string)
 
 bool CBC::download(const QString& filename, const QString& port)
 {
-    if(!compile(filename, port))
-        return false;
-    
-    qWarning("Calling gcc...");
-    m_gcc.reset();
-    
-    m_gcc.start(m_gccPath, QStringList() << "-E" << "-Wp,-MM" << filename);
-    m_gcc.waitForFinished();
-    
-    qWarning("Gcc finished...");
-    
-    QString depString = QString::fromLocal8Bit(m_gcc.readAllStandardOutput());
-    
-    QStringList deps = getPaths(depString);
-    
-    deps.removeFirst();
-    qWarning("deps.size()=%d", deps.size());
-    
-    qWarning("deps=\"%s\"", qPrintable(deps.join(",")));
-    
-    qWarning("Calling sendFile");
-    
-    if(!QSerialPort(port).open(QIODevice::ReadWrite)) return false;
-    
-    m_serial.setPort(port);
-    return m_serial.sendFile(filename, deps);
+	if(!compile(filename, port)) return false;
+
+	qWarning("Calling gcc...");
+	m_gcc.reset();
+
+	m_gcc.start(m_gccPath, QStringList() << "-E" << "-Wp,-MM" << filename);
+	m_gcc.waitForFinished();
+
+	qWarning("Gcc finished...");
+
+	QString depString = QString::fromLocal8Bit(m_gcc.readAllStandardOutput());
+
+	QStringList deps = getPaths(depString);
+
+	deps.removeFirst();
+	qWarning("deps.size()=%d", deps.size());
+
+	qWarning("deps=\"%s\"", qPrintable(deps.join(",")));
+
+	qWarning("Calling sendFile");
+
+	if(!QSerialPort(port).open(QIODevice::ReadWrite)) return false; 
+
+	m_serial.setPort(port);
+	qWarning() << "Sending file";
+	
+	QString projectName = QFileInfo(filename).baseName();
+	m_serial.sendCommand(KISS_CREATE_PROJECT_COMMAND, projectName.toAscii());
+	QByteArray dest = (QString("/mnt/user/code/") + projectName + "/" + QFileInfo(filename).fileName()).toAscii();
+	m_serial.sendFile(filename, dest.data());
+	return m_serial.sendCommand(KISS_COMPILE_COMMAND, dest);
 }
 
 bool CBC::simulate(const QString& filename, const QString& port)
 {
-	if(!compile(filename, port))
-		return false;
+	if(!compile(filename, port)) return false;
 
 	QString outputString;
 	QFileInfo outputFileInfo(m_outputFileName);
@@ -177,10 +183,9 @@ bool CBC::simulate(const QString& filename, const QString& port)
   return true;
 }
 
-DebuggerInterface* CBC::debug(const QString& filename, const QString& port)
-{		
-	return compile(filename, port, true) ? new Gdb(m_outputFileName) : 0;
-}
+DebuggerInterface* CBC::debug(const QString& filename, const QString& port) { return compile(filename, port, true) ? new Gdb(m_outputFileName) : 0; }
+
+Tab* CBC::ui(const QString& port) { return new Controller(this, &m_serial, port); }
 
 void CBC::processCompilerOutput()
 {
@@ -223,12 +228,9 @@ void CBC::processCompilerOutput()
 			m_warningMessages << inputLine;
 		}
 	}
-	if(!foundError && !foundWarning)
-		m_warningMessages.clear();
-	else if(!foundError)
-		m_errorMessages.clear();
-	else if(!foundWarning)
-		m_warningMessages.clear();
+	if(!foundError && !foundWarning) m_warningMessages.clear();
+	else if(!foundError) m_errorMessages.clear();
+	else if(!foundWarning) m_warningMessages.clear();
 }
 
 void CBC::processLinkerOutput()
@@ -276,6 +278,19 @@ void CBC::refreshSettings()
 #endif
 }
 
+void CBC::aPressed(const QString& port) { m_serial.setPort(port); m_serial.sendCommand(KISS_PRESS_A_COMMAND); }
+void CBC::bPressed(const QString& port) { m_serial.setPort(port); m_serial.sendCommand(KISS_PRESS_B_COMMAND); }
+void CBC::leftPressed(const QString& port) { m_serial.setPort(port); m_serial.sendCommand(KISS_PRESS_LEFT_COMMAND); }
+void CBC::rightPressed(const QString& port) { m_serial.setPort(port); m_serial.sendCommand(KISS_PRESS_RIGHT_COMMAND); }
+void CBC::upPressed(const QString& port) { m_serial.setPort(port); m_serial.sendCommand(KISS_PRESS_UP_COMMAND); }
+void CBC::downPressed(const QString& port) { m_serial.setPort(port); m_serial.sendCommand(KISS_PRESS_DOWN_COMMAND); }
+void CBC::aReleased(const QString& port) { m_serial.setPort(port); m_serial.sendCommand(KISS_RELEASE_A_COMMAND); }
+void CBC::bReleased(const QString& port) { m_serial.setPort(port); m_serial.sendCommand(KISS_RELEASE_B_COMMAND); }
+void CBC::leftReleased(const QString& port) { m_serial.setPort(port); m_serial.sendCommand(KISS_RELEASE_LEFT_COMMAND); }
+void CBC::rightReleased(const QString& port) { m_serial.setPort(port); m_serial.sendCommand(KISS_RELEASE_RIGHT_COMMAND); }
+void CBC::upReleased(const QString& port) { m_serial.setPort(port); m_serial.sendCommand(KISS_RELEASE_UP_COMMAND); }
+void CBC::downReleased(const QString& port) { m_serial.setPort(port); m_serial.sendCommand(KISS_RELEASE_DOWN_COMMAND); }
+
 bool CBC::compile(const QString& filename, const QString& port, bool debug)
 {
 	QString p = port;
@@ -306,14 +321,14 @@ bool CBC::compile(const QString& filename, const QString& port, bool debug)
 		args << "-pg";
 	#endif
 	}
+	
 	qWarning() << "Object Args:" << args;
 	m_gcc.start(m_gccPath, args);
 	m_gcc.waitForFinished();
 	processCompilerOutput();
 	m_linkerMessages.clear();
 
-	if(m_gcc.exitCode() != 0)
-		return false;
+	if(m_gcc.exitCode() != 0) return false;
 
 	args.clear();
 	args << "-o" << m_outputFileName << objectName;
@@ -323,14 +338,9 @@ bool CBC::compile(const QString& filename, const QString& port, bool debug)
 	m_gcc.waitForFinished();
 	processLinkerOutput();
 
-	if(!debug) {
-		QFile objectFile(objectName);
-		objectFile.remove();
-	}
-
-	if(m_gcc.exitCode() == 0)
-		return true;
-	return false;
+	if(!debug) QFile(objectName).remove();
+	
+	return m_gcc.exitCode() == 0;
 }
 
 Q_EXPORT_PLUGIN2(cbc_plugin, CBC);

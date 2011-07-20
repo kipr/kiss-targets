@@ -146,7 +146,7 @@ bool Java::download(const QString& filename, const QString& port)
 	if(!QSerialPort(port).open(QIODevice::ReadWrite)) return false;
 
 	m_serial.setPort(port);
-	return m_serial.sendFile(m_outputFileName, QStringList());
+	return m_serial.sendFile(m_outputFileName, "/mnt/user/code/");
 }
 
 void Java::processCompilerOutput()

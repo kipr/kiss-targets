@@ -28,6 +28,7 @@
 
 #include "TargetInterface.h"
 #include "SerialClient.h"
+#include "Controller.h"
 
 class CBC : public QObject, public TargetInterface
 {
@@ -39,18 +40,34 @@ public:
 	~CBC();
 
 	bool compile(const QString& filename, const QString& port);
-	bool run(const QString&, const QString&) { return false; }
-	void stop(const QString&) {}
+	bool run(const QString&, const QString&);
+	void stop(const QString&);
 	bool download(const QString& filename, const QString& port);
 	bool simulate(const QString& filename, const QString& port);
 	DebuggerInterface* debug(const QString&, const QString&);
+	Tab* ui(const QString& port);
 
 	bool hasCompile() 	{ return true; }
-	bool hasRun() 		{ return false; }
+	bool hasRun() 		{ return true; }
 	bool hasDownload() 	{ return true; }
-	bool hasStop() 		{ return false; }
+	bool hasStop() 		{ return true; }
 	bool hasSimulate() 	{ return true; }
 	bool hasDebug() 	{ return true; }
+	bool hasUi() 		{ return true; }
+
+	void aPressed(const QString& port);
+	void bPressed(const QString& port);
+	void leftPressed(const QString& port);
+	void rightPressed(const QString& port);
+	void upPressed(const QString& port);
+	void downPressed(const QString& port);
+
+	void aReleased(const QString& port);
+	void bReleased(const QString& port);
+	void leftReleased(const QString& port);
+	void rightReleased(const QString& port);
+	void upReleased(const QString& port);
+	void downReleased(const QString& port);
 
 private:
 	bool compile(const QString& filename, const QString& port, bool debug);

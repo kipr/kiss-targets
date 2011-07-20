@@ -23,45 +23,37 @@
 #include <QBuffer>
 #include <QFileInfo>
 #include <QVector>
+#include <QProcess>
+#include <QDebug>
+#include <QTime>
+#include <QThread>
+
+#define TIMEOUT 500
 
 SerialClient::SerialClient(QString port, QObject *parent) : QObject(parent), 
                                                             m_serialPort(port), 
                                                             m_stream(&m_serialPort)
-{}
+{ open(); }
 
-SerialClient::~SerialClient() {}
+SerialClient::~SerialClient() { close(); }
 
-bool SerialClient::sendFile(QString name, QStringList deps)
+bool SerialClient::open()
 {
+	if(m_serialPort.isOpen()) return true;
 	m_serialPort.open();
+	return true;
+}
 
-	QByteArray data;
-	QDataStream dataStream(&data, QIODevice::WriteOnly);
+void SerialClient::close() { if(m_serialPort.isOpen()) m_serialPort.close(); }
 
-	QFileInfo info(name);
-	QFile fin(name);
-	fin.open(QIODevice::ReadOnly);
-	dataStream << info.fileName();
-	dataStream << fin.readAll();
-	fin.close();
-
-	for(int i = 0;i < deps.size();i++) {
-		info.setFile(deps[i]);
-		fin.setFileName(deps[i]);
-		fin.open(QIODevice::ReadOnly);
-		dataStream << info.fileName();
-		dataStream << fin.readAll();
-		fin.close();
-	}
-
+bool SerialClient::sendCommand(quint16 command, const QByteArray& data)
+{
 	QByteArray compressedData = qCompress(data, 9);
-	data.clear();
-	data.squeeze();
 
 	QList<QByteArray> dataChunks;
 	while(compressedData.size()) {
-		dataChunks.push_front(compressedData.right(32));
-		compressedData.chop(32);
+		dataChunks.push_front(compressedData.right(64));
+		compressedData.chop(64);
 	}
 
 	compressedData.squeeze();
@@ -70,15 +62,76 @@ bool SerialClient::sendFile(QString name, QStringList deps)
 	QDataStream stream(&header, QIODevice::WriteOnly);
 	stream << SERIAL_START;
 	stream << (quint16)dataChunks.size();
+	stream << command;
 
 	dataChunks.push_front(header);
 
-	for(int i = 0; i < dataChunks.size(); ++i) {
+	for(int i = 0; i < dataChunks.size(); ++i) 
 		if(!writePacket(dataChunks[i])) return false;
+	
+	return true;
+}
+
+bool SerialClient::waitForResult(quint16 command, QByteArray& data)
+{
+	
+	QTime timer;
+	timer.start();
+	QByteArray header;
+	while(timer.elapsed() < TIMEOUT) {
+		header.clear();
+		if(readPacket(&header)) break;
+		QThread::yieldCurrentThread();
 	}
+	
+	if(timer.elapsed() >= TIMEOUT) return false;
+	
+	QDataStream headerStream(&header, QIODevice::ReadOnly);
 
-	m_serialPort.close();
+	quint16 startWord;
+	quint16 packetCount;
+	quint16 recCommand;
 
+	headerStream >> startWord;
+	headerStream >> packetCount;
+	headerStream >> recCommand;
+	
+	qWarning() << recCommand;
+
+	if(startWord != SERIAL_START) return false;
+	qWarning("StartWord: %x", startWord);
+
+	qWarning() << "Reading Header for command" << recCommand;
+	QByteArray compressedData;
+	
+	for(quint16 i = 0;i < packetCount;i++) {
+		QByteArray data;
+		if(!readPacket(&data)) return false;
+		compressedData += data;
+	}
+	qWarning() << "Uncompressing...";
+
+	data = qUncompress(compressedData);
+	compressedData.clear();
+	compressedData.squeeze();
+	
+	return true;
+}
+
+bool SerialClient::sendFile(const QString& name, const QString& destination)
+{
+	QByteArray data;
+	QDataStream dataStream(&data, QIODevice::WriteOnly);
+
+	QFileInfo info(name);
+	QFile fin(name);
+	fin.open(QIODevice::ReadOnly);
+	dataStream << destination;
+	dataStream << fin.readAll();
+	fin.close();
+
+	sendCommand(KISS_SEND_FILE_COMMAND, data);
+	
 	return true;
 }
 
@@ -91,10 +144,6 @@ bool SerialClient::checkOk()
 
 bool SerialClient::writePacket(QByteArray& data)
 {
-	quint16 checksum;
-
-	checksum = qChecksum(data, data.size());
-
 	for(int i = 0;i < SERIAL_MAX_RETRY;i++) {
 		m_stream << SERIAL_KEY;
 		m_stream << data;
@@ -104,7 +153,34 @@ bool SerialClient::writePacket(QByteArray& data)
 	return false;
 }
 
-void SerialClient::setPort(QString port)
+/* Packets look like this:
+        quint32     key = 4 bytes
+        QByteArray  data = n bytes
+        quint16     checksum = 2 bytes */
+bool SerialClient::readPacket(QByteArray *packetData)
 {
-	m_serialPort.setPort(port);
+	for(int i = 0; i < 5; ++i) {
+		QByteArray data;
+		quint32 key = 0;
+		quint16 checksum = 0xFFFF;
+
+		m_stream >> key;
+		if (key == SERIAL_KEY) {
+		    m_stream >> data;
+		    m_stream >> checksum;
+		    qWarning("data.size()=%d", data.size());
+		    if(checksum == qChecksum(data, data.size())) {
+		        *packetData = data;
+		        sendOk();
+		        return true;
+		    }
+		}
+		m_stream.skipRawData(1024);
+		m_stream.resetStatus();
+		qWarning("Retry...");
+	}
+	return false;
 }
+
+void SerialClient::sendOk() { m_stream << SERIAL_MESSAGE_OK; }
+void SerialClient::setPort(const QString& port) { close(); m_serialPort.setPort(port); open(); }

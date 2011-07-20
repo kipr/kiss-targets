@@ -27,7 +27,6 @@
 #include <QSettings>
 
 #include "TargetInterface.h"
-#include "LexerSpec.h"
 
 class Gcc : public QObject, public TargetInterface
 {
@@ -40,16 +39,10 @@ public:
 
 	bool compile(const QString& filename, const QString& port);
 	bool run(const QString& filename, const QString& port);
-	void stop(const QString&) {}
-	bool download(const QString&, const QString&) { return false; }
-	bool simulate(const QString&, const QString&) { return false; }
 	DebuggerInterface* debug(const QString& filename, const QString& port);
 
 	bool hasCompile() 	{ return true; }
 	bool hasRun() 		{ return true; }
-	bool hasDownload() 	{ return false; }
-	bool hasStop() 		{ return false; }
-	bool hasSimulate() 	{ return false; }
 	bool hasDebug() 	{ return true; }
 private:
 	bool compile(const QString& filename, const QString& port, bool debug);

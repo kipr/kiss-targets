@@ -40,17 +40,11 @@ public:
 
 	bool compile(const QString& filename, const QString& port);
 	bool run(const QString& filename, const QString& port);
-	void stop(const QString&) {}
 	bool download(const QString&, const QString&);
-	bool simulate(const QString&, const QString&) { return false; }
-	DebuggerInterface* debug(const QString&, const QString&) { return 0; }
 
 	bool hasCompile() 	{ return true; }
 	bool hasRun() 		{ return true; }
 	bool hasDownload() 	{ return true; }
-	bool hasStop() 		{ return false; }
-	bool hasSimulate() 	{ return false; }
-	bool hasDebug() 	{ return false; }
 
 private:
 	QProcess m_java;
