@@ -119,7 +119,7 @@ bool CBC::download(const QString& filename, const QString& port)
 
 	qWarning("Calling sendFile");
 
-	if(!QSerialPort(port).open(QIODevice::ReadWrite)) return false; 
+	// if(!QSerialPort(port).open(QIODevice::ReadWrite)) return false; 
 
 	m_serial.setPort(port);
 	qWarning() << "Sending file";
