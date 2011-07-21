@@ -55,7 +55,7 @@ bool QSerialPort::open(OpenMode)
 	strncpy(realPortname, "\\\\.\\", 4);
 	strncpy(realPortname+4, m_name.toLocal8Bit(), 5);
 
-	m_handle = CreateFileA(realPortname, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, 0);
+	m_handle = CreateFileA(realPortname, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
 
 	if(m_handle == INVALID_HANDLE_VALUE) return false;
 
