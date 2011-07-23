@@ -74,7 +74,6 @@ bool SerialClient::sendCommand(quint16 command, const QByteArray& data)
 
 bool SerialClient::waitForResult(quint16 command, QByteArray& data)
 {
-	
 	QTime timer;
 	timer.start();
 	QByteArray header;

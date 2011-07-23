@@ -143,10 +143,17 @@ bool Java::download(const QString& filename, const QString& port)
 {
 	if(!compile(filename, port)) return false;
 
-	if(!QSerialPort(port).open(QIODevice::ReadWrite)) return false;
+	// if(!QSerialPort(port).open(QIODevice::ReadWrite)) return false;
 
 	m_serial.setPort(port);
-	return m_serial.sendFile(m_outputFileName, "/mnt/user/code/");
+	QString projectName = QFileInfo(filename).baseName();
+	m_serial.sendCommand(KISS_CREATE_PROJECT_COMMAND, projectName.toAscii());
+	QByteArray dest = (QString("/mnt/user/code/") + projectName + "/" + QFileInfo(filename).baseName() + ".class").toAscii();
+	QFileInfo fileInfo(filename);
+	m_serial.sendFile(fileInfo.absolutePath() + "/" + fileInfo.baseName() + ".class", dest.data());
+	bool ret = m_serial.sendCommand(KISS_COMPILE_COMMAND, dest);
+	m_serial.close();
+	return ret;
 }
 
 void Java::processCompilerOutput()

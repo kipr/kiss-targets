@@ -71,9 +71,11 @@ bool CBC::compile(const QString& filename, const QString& port) { return compile
 bool CBC::run(const QString& filename, const QString& port) 
 {
 	m_serial.setPort(port);
-	return m_serial.sendCommand(KISS_RUN_COMMAND);
+	bool ret = m_serial.sendCommand(KISS_RUN_COMMAND);
+	m_serial.close();
+	return ret;
 }
-void CBC::stop(const QString& port) { m_serial.setPort(port); m_serial.sendCommand(KISS_STOP_COMMAND); }
+void CBC::stop(const QString& port) { m_serial.setPort(port); m_serial.sendCommand(KISS_STOP_COMMAND); m_serial.close(); }
 
 QStringList CBC::getPaths(const QString& string)
 {
@@ -128,7 +130,9 @@ bool CBC::download(const QString& filename, const QString& port)
 	m_serial.sendCommand(KISS_CREATE_PROJECT_COMMAND, projectName.toAscii());
 	QByteArray dest = (QString("/mnt/user/code/") + projectName + "/" + QFileInfo(filename).fileName()).toAscii();
 	m_serial.sendFile(filename, dest.data());
-	return m_serial.sendCommand(KISS_COMPILE_COMMAND, dest);
+	bool ret = m_serial.sendCommand(KISS_COMPILE_COMMAND, dest);
+	m_serial.close();
+	return ret;
 }
 
 bool CBC::simulate(const QString& filename, const QString& port)
