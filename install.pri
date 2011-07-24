@@ -21,7 +21,7 @@ macx: create_kiss_archives.extra = cd ../root; \
 
 unix:!macx: create_kiss_archives.extra = cd ../root; \
 	find targets/$${NAME} -type f > contents; \
-	$${KISS}/deploy/KISS.app/Contents/MacOS/KISS --createArchive $${NAME} $${VER} nix contents $${NAME}_target_nix.kiss; \
+	$${KISS}/deploy/KISS --createArchive $${NAME} $${VER} nix contents $${NAME}_target_nix.kiss; \
 	rm contents; \
 	cd - > /dev/null
 		
