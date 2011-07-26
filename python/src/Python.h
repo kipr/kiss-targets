@@ -18,8 +18,8 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
  
-#ifndef __GCC_H__
-#define __GCC_H__
+#ifndef __PYTHON_H__
+#define __PYTHON_H__
 
 #include <qplugin.h>
 #include <QProcess>
@@ -29,34 +29,26 @@
 #include "TargetInterface.h"
 #include "SerialClient.h"
 
-class Java : public QObject, public TargetInterface
+class Python : public QObject, public TargetInterface
 {
 	Q_OBJECT
 	Q_INTERFACES(TargetInterface)
 	
 public:
-	Java();
-	~Java();
+	Python();
+	~Python();
 
-	bool compile(const QString& filename, const QString& port);
 	bool run(const QString& filename, const QString& port);
-	bool download(const QString&, const QString&);
-	bool simulate(const QString& filename, const QString& port);
 
-	bool hasCompile() 	{ return true; }
-	bool hasRun() 		{ return true; }
-	bool hasDownload() 	{ return true; }
-	bool hasSimulate() 	{ return true; }
+	bool hasRun() { return true; }
 
 private:
-	QProcess m_java;
+	QProcess m_python;
 	QProcess m_outputBinary;
-	QString m_javaPath;
+	QString m_pythonPath;
 	QString m_outputFileName;
-	QStringList m_cflags,m_lflags;
-	SerialClient m_serial;
+	QStringList m_cflags, m_lflags;
 	
-	void processCompilerOutput();
 	void refreshSettings();
 };
 

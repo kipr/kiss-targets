@@ -1,0 +1,9 @@
+[General]
+description=Python
+display_name=Python
+extensions=Python Sources (*.py)
+manual=targets/python/manual/index.html
+name=python
+default_extension=py
+port_dialog=false
+c_style_blocks=false

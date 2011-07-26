@@ -46,8 +46,10 @@ Gcc::Gcc()
 #endif
 
 	QFileInfo gccExecutable(m_gccPath);
-	if(!gccExecutable.exists())
+	if(!gccExecutable.exists()) {
 		QMessageBox::critical(0, "Error", "Could not find GCC Executable!");
+		setError(true);
+	}
 
 	m_gcc.setReadChannel(QProcess::StandardError);
 	

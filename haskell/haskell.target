@@ -1,0 +1,9 @@
+[General]
+description=Local Haskell
+display_name=Haskell
+extensions=Haskell Sources (*.hs)
+manual=targets/haskell/manual/index.html
+name=haskell
+default_extension=hs
+port_dialog=false
+c_style_blocks=false

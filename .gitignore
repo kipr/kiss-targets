@@ -7,3 +7,7 @@ root/*
 *.dylib
 moc_*
 ui_*
+cbc2/build
+gcc/build
+haskell/build
+python/build

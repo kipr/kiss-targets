@@ -59,7 +59,8 @@ target_manual.files = 	manual/CBCCSS.css \
 						manual/cbcmanual.html \
 						manual/fdl-1.3.txt \
 						manual/KISSCBCManualBody.htm \
-						manual/KISSCBCManualTable.htm 
+						manual/KISSCBCManualTable.htm \
+						manual/Sensor_and_Motor_Manual_BB2011.pdf
 											
 target_manual.path = ../$${INSTALL_BASE}/targets/cbc2/manual
 

@@ -18,7 +18,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
  
-#include "Java.h"
+#include "Haskell.h"
 #include "QSerialPort.h"
 #include <QProcess>
 #include <QString>
@@ -32,59 +32,56 @@
 #include <QDateTime>
 #include <QDebug>
 
-Java::Java()
+Haskell::Haskell()
 {
 #ifdef Q_OS_WIN
-	// This code finds the jdk directory, which doesn't really have a standard naming convention
-	QDir javaInstall("C:/Program Files/Java/");
-	const QStringList& jdks = javaInstall.entryList(QStringList() << "jdk*", QDir::Dirs | QDir::NoDotAndDotDot);
-	if(!jdks.isEmpty()) javaInstall.cd(jdks[0]);
-	javaInstall.cd("bin");
-	m_javaPath = javaInstall.filePath("javac.exe");
+	// This code finds the haskell directory, which doesn't really have a standard naming convention
+	QDir haskellInstall("C:/Program Files/Haskell Platform/");
+	const QStringList& installed = haskellInstall.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+	if(!installed.isEmpty()) haskellInstall.cd(jdks[0]);
+	haskellInstall.cd("bin");
+	m_haskellPath = haskellInstall.filePath("ghc.exe");
 #else
-	m_javaPath="/usr/bin/javac";
+	m_haskellPath="/usr/bin/ghc";
 #endif
 
-	QFileInfo JavaExecutable(m_javaPath);
-	if(!JavaExecutable.exists()) {
-		QMessageBox::critical(0, "Error", "Could not find Java Executable!");
-		setError(true);
-	}
+	QFileInfo haskellExecutable(m_haskellPath);
+	if(!haskellExecutable.exists()) QMessageBox::critical(0, "Error", "Could not find GHC Executable!");
 
-	m_java.setReadChannel(QProcess::StandardError);
+	m_haskell.setReadChannel(QProcess::StandardError);
 
 }
 
-Java::~Java()
+Haskell::~Haskell()
 {
-	m_java.kill();
+	m_haskell.kill();
 	m_outputBinary.kill();
 }
 
-bool Java::compile(const QString& filename, const QString& port)
+bool Haskell::compile(const QString& filename, const QString& port)
 {
 	QFileInfo sourceInfo(filename);
 	QStringList args;
 
 	refreshSettings();
 
-	m_outputFileName = sourceInfo.dir().absoluteFilePath(sourceInfo.baseName() + ".class");
+	m_outputFileName = sourceInfo.dir().absoluteFilePath(sourceInfo.baseName());
 
 	QFileInfo outputInfo(m_outputFileName);
 	if(sourceInfo.lastModified() < outputInfo.lastModified())
 		return true;
 
-	args << "-cp" << QDir::toNativeSeparators("targets/java/lib/CBCJVM.jar") << filename;
+	args << filename;
 	qWarning() << args;
-	m_java.start(m_javaPath, args);
-	m_java.waitForFinished();
+	m_haskell.start(m_haskellPath, args);
+	m_haskell.waitForFinished();
 	processCompilerOutput();
 	m_linkerMessages.clear();
 
-	return m_java.exitCode() == 0;
+	return m_haskell.exitCode() == 0;
 }
 
-bool Java::simulate(const QString& filename, const QString& port)
+bool Haskell::run(const QString& filename, const QString& port)
 {
 	if(!compile(filename, port)) return false;
 
@@ -96,20 +93,20 @@ bool Java::simulate(const QString& filename, const QString& port)
 	scriptFile.setFileName(QDir::temp().absoluteFilePath("kiprBatchFile.cmd"));
 	outputString += "@echo off\n";
 	outputString += "cd \"" + QDir::toNativeSeparators(outputFileInfo.absolutePath()) + "\"\n";
-	outputString += "java -cp . \"" + outputFileInfo.baseName() + "\"\n";
+	outputString += "\"" + outputFileInfo.baseName() + "\"\n";
 	outputString +=  "pause\n";
 #else
 	scriptFile.setFileName(QDir::temp().absoluteFilePath("kiprScript.sh"));
 	outputString += "#!/bin/bash\n";
 	outputString += "cd \"" + outputFileInfo.absolutePath() + "\"\n";
 	outputString += "clear\n";
-	outputString += "java -cp . \"" + outputFileInfo.baseName() + "\"\n";
+	outputString += "\"./" + outputFileInfo.baseName() + "\"\n";
 #endif
 
 	qWarning() << outputString;
 
 	if(!scriptFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-		qWarning("Java::run() Unable to open temp file for writing");
+		qWarning("Haskell::run() Unable to open temp file for writing");
 		return false;
 	}
 
@@ -140,40 +137,15 @@ bool Java::simulate(const QString& filename, const QString& port)
 	return true;
 }
 
-bool Java::run(const QString& filename, const QString& port)
-{
-	m_serial.setPort(port);
-	bool ret = m_serial.sendCommand(KISS_RUN_COMMAND);
-	m_serial.close();
-	return ret;
-}
-
-bool Java::download(const QString& filename, const QString& port)
-{
-	if(!compile(filename, port)) return false;
-
-	// if(!QSerialPort(port).open(QIODevice::ReadWrite)) return false;
-
-	m_serial.setPort(port);
-	QString projectName = QFileInfo(filename).baseName();
-	m_serial.sendCommand(KISS_CREATE_PROJECT_COMMAND, projectName.toAscii());
-	QByteArray dest = (QString("/mnt/user/code/") + projectName + "/" + QFileInfo(filename).baseName() + ".class").toAscii();
-	QFileInfo fileInfo(filename);
-	m_serial.sendFile(fileInfo.absolutePath() + "/" + fileInfo.baseName() + ".class", dest.data());
-	bool ret = m_serial.sendCommand(KISS_COMPILE_COMMAND, dest);
-	m_serial.close();
-	return ret;
-}
-
-void Java::processCompilerOutput()
+void Haskell::processCompilerOutput()
 {
 	bool foundError = false, foundWarning = false;
 	m_errorMessages.clear();
 	m_warningMessages.clear();
 	m_verboseMessages.clear();
 
-	while(m_java.canReadLine()) {
-		QString inputLine = QString::fromLocal8Bit(m_java.readLine());
+	while(m_haskell.canReadLine()) {
+		QString inputLine = QString::fromLocal8Bit(m_haskell.readLine());
 		QString outputLine;
 
 		inputLine.remove(QRegExp("\\r*\\n$"));
@@ -207,7 +179,7 @@ void Java::processCompilerOutput()
 	else if(!foundWarning) m_warningMessages.clear();
 }
 
-void Java::refreshSettings()
+void Haskell::refreshSettings()
 {
 	QStringList lib_dirs;
 	QSettings settings(m_targetFile, QSettings::IniFormat);
@@ -224,4 +196,4 @@ void Java::refreshSettings()
 	}
 }
 
-Q_EXPORT_PLUGIN2(java_plugin, Java);
+Q_EXPORT_PLUGIN2(python_plugin, Haskell);

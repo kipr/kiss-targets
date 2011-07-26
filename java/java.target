@@ -2,10 +2,13 @@
 description=Use CBCJVM
 display_name=CBCJVM
 extensions=Java Sources (*.java)
-manual=targets/java/manual/index.html
 name=java
 default_extension=java
 port_dialog=true
+c_style_blocks=true
+
+[Manuals]
+Manual=targets/java/manual/index.html
 
 [Target]
-lib_dirs=targets/gcc/lib
+lib_dirs=targets/java/lib

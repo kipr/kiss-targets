@@ -44,8 +44,14 @@ CBC::CBC()
 	m_gppPath="/usr/bin/g++";
 #endif
 
-	if(!QFileInfo(m_gccPath).exists()) QMessageBox::critical(0, "Error", "Could not find gcc Executable!");
-	if(!QFileInfo(m_gppPath).exists()) QMessageBox::critical(0, "Error", "Could not find g++ Executable!");
+	if(!QFileInfo(m_gccPath).exists()) {
+		QMessageBox::critical(0, "Error", "Could not find gcc Executable!");
+		setError(true);
+	}
+	if(!QFileInfo(m_gppPath).exists()) {
+		QMessageBox::critical(0, "Error", "Could not find g++ Executable!");
+		setError(true);
+	}
 	
 	m_gcc.setReadChannel(QProcess::StandardError);
 	
@@ -187,7 +193,10 @@ bool CBC::simulate(const QString& filename, const QString& port)
   return true;
 }
 
-DebuggerInterface* CBC::debug(const QString& filename, const QString& port) { return compile(filename, port, true) ? new Gdb(m_outputFileName) : 0; }
+DebuggerInterface* CBC::debug(const QString& filename, const QString& port) 
+{
+	return compile(filename, port, true) ? new Gdb(m_outputFileName) : 0;
+}
 
 Tab* CBC::ui(const QString& port) { return new Controller(this, &m_serial, port); }
 

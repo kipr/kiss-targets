@@ -18,8 +18,8 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
  
-#ifndef __GCC_H__
-#define __GCC_H__
+#ifndef __HASKELL_H__
+#define __HASKELL_H__
 
 #include <qplugin.h>
 #include <QProcess>
@@ -29,32 +29,27 @@
 #include "TargetInterface.h"
 #include "SerialClient.h"
 
-class Java : public QObject, public TargetInterface
+class Haskell : public QObject, public TargetInterface
 {
 	Q_OBJECT
 	Q_INTERFACES(TargetInterface)
 	
 public:
-	Java();
-	~Java();
+	Haskell();
+	~Haskell();
 
 	bool compile(const QString& filename, const QString& port);
 	bool run(const QString& filename, const QString& port);
-	bool download(const QString&, const QString&);
-	bool simulate(const QString& filename, const QString& port);
 
 	bool hasCompile() 	{ return true; }
 	bool hasRun() 		{ return true; }
-	bool hasDownload() 	{ return true; }
-	bool hasSimulate() 	{ return true; }
 
 private:
-	QProcess m_java;
+	QProcess m_haskell;
 	QProcess m_outputBinary;
-	QString m_javaPath;
+	QString m_haskellPath;
 	QString m_outputFileName;
-	QStringList m_cflags,m_lflags;
-	SerialClient m_serial;
+	QStringList m_cflags, m_lflags;
 	
 	void processCompilerOutput();
 	void refreshSettings();
