@@ -1,0 +1,19 @@
+// Train the camera so that it recognizes a red colored
+// object for color channel 0
+int main() { 
+  int x, y, color=0;  // set up for color channel 0 (red)
+  while (black_button() == 0) //run till button is pressed
+    { 
+      track_update(); // process the most recent image
+      if (track_count(color) > 0)
+        { // get  x, y for the biggest blob the channel sees
+           x = track_x(color,0); y = track_y(color,0); 
+	        printf("Biggest blob at (%d,%d)\n",x,y); 
+        }
+	   else
+        { printf("No color match in Frame\n"); }
+      sleep(0.2);  // give print time to register
+    }
+    printf("Program is done.\n");
+}
+

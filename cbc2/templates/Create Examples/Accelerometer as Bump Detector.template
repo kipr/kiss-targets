@@ -1,0 +1,34 @@
+/***************************************************************************
+  Botball Repository B-h6.0: Detect a hit when backing up the Create module
+    Write a program with a loop controlled by the black button
+      that uses the accelerometer to determine when the Create hits 
+      something going backward or when going forward
+  Author: KIPR
+  Date: 1/20/2011
+/***************************************************************************/
+int main() {
+  int fwd_bk = -1;
+  int threshold = 10;
+  create_connect();
+  while (black_button()==0) {
+    // monitor for a hit while going backward
+    create_drive_straight(-250); // start going backwards
+    sleep(0.5);                  // give time to reach constant velocity
+    while (fwd_bk == -1) {
+      printf("Moving backwards\n");
+      if (accel_x() > threshold) { fwd_bk = 1; } // hit, reverse direction
+      if (black_button()==1) { break; }
+    }
+    // monitor for a hit while going forward
+    create_drive_straight(250); // start going forwards
+    sleep(0.5);                 // give time to reach constant velocity
+    while (fwd_bk == 1) {
+      printf("Moving forward\n");
+      if (accel_x() < -threshold) { fwd_bk = -1; }
+                                // hit detected, reverse direction
+      if (black_button()==1) { break; }	
+    }
+  }
+  create_disconnect();
+}
+

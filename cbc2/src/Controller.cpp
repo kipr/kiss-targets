@@ -12,16 +12,15 @@ Controller::Controller(CBC* cbc, SerialClient* client, const QString& port) : QW
 }
 
 void Controller::activate() {}
-void Controller::addActionsFile(QMenu* file) { Q_UNUSED(file); }
-void Controller::addActionsEdit(QMenu* edit) { Q_UNUSED(edit); }
-void Controller::addActionsHelp(QMenu* help) { Q_UNUSED(help); }
-void Controller::addOtherActions(QMenuBar* menuBar) { Q_UNUSED(menuBar); }
-void Controller::addToolbarActions(QToolBar* toolbar) { Q_UNUSED(toolbar); }
+void Controller::addActionsFile(QMenu*) {}
+void Controller::addActionsEdit(QMenu*) {}
+void Controller::addActionsHelp(QMenu*) {}
+void Controller::addOtherActions(QMenuBar*) {}
+void Controller::addToolbarActions(QToolBar*) {}
 bool Controller::beginSetup() { return true; }
 void Controller::completeSetup() {}
 bool Controller::close() { return true; }
 void Controller::refreshSettings() {}
-void Controller::moveTo(int line, int pos) { Q_UNUSED(line); Q_UNUSED(pos); }
 
 void Controller::update()
 {

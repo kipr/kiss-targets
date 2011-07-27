@@ -1,0 +1,15 @@
+int main() {
+   // preset servo 2 position
+   set_servo_position(2,200); 
+   enable_servos(); // turn on servos
+   sleep(.1); // pause while it moves
+   while(get_servo_position(2) < 1800)
+   {  // move servo 2 in steps of 100
+      set_servo_position(2,
+         get_servo_position(2)+100);
+      sleep(.1); // pause while it moves
+   }
+   disable_servos();
+}
+
+

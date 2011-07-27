@@ -1,0 +1,19 @@
+/*****************************************************************
+*********  Stop on digital touch sensor               
+*****************************************************************/
+
+int main()
+{
+  // 1. Wait for the light sensor on analog port 0 to turn on
+  wait_for_light(0);
+  
+  // 2. Move the motor on motor port 0 at 100 ticks/sec
+  mav(0, 100);
+  
+  // 3. Continue moving until the digital sensor on port 8 is pressed
+  while (digital(8) == 0) { /* do nothing */ }
+  
+  // 4. Display "Done!" to the screen when finished
+  printf("Done!\n");
+}
+

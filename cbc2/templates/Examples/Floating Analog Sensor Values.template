@@ -1,0 +1,10 @@
+int main() {
+  set_each_analog_state(0,1,0,1,0,0,0,0);
+  while(a_button()==0) {
+    printf("Port 1ET: %d ",analog10(1));
+    printf("Port 3 Sonar: %d inches\n",analog(3));
+    sleep(1);
+  }
+}
+
+

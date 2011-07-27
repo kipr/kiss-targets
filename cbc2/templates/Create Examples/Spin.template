@@ -1,0 +1,18 @@
+/*********************************************************************  
+Spin the Create 90 degrees clockwise             
+*********************************************************************/
+int main()
+{	
+  printf("Drive 90 degrees clockwise"); // announce the program	
+  sleep(1.0); // wait 1 second
+  create_connect(); // Open the connection between the CBC and the Create
+  // As long as the Create's angle has not changed by 90 degrees clockwi
+  while (get_create_total_angle(0.1) > -90) 	
+  {		
+  // Tell the Create to spin clockwise at a speed of 100mm/sec
+    create_drive_direct(-100, 100);	
+  }		
+  create_stop(); // Stop the Create		
+  create_disconnect(); // Disconnect the Create
+}
+

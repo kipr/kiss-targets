@@ -1,0 +1,30 @@
+/***************************************************************************
+*********  Bang Bang Control Create               
+***************************************************************************/
+int main()
+{
+  // 1. Set analog port 0 to floating analog
+  set_each_analog_state(1,0,0,0,0,0,0,0);
+  // 2. Connect to the Create
+  create_connect();
+  // 3. Loop until black button is pressed
+  while (black_button() == 0) {
+    // 4. If the floating analog rangefinder on port 0 reads
+    //    less than 18 inches, back up at a speed of 100 mm/sec.
+    if (analog(0) < 18.0) {    // note: range value for sonar
+      create_drive_direct(-100, -100);
+      sleep(0.1);
+    }	
+    // 5. Otherwise, drive forward at a speed of 100 mm/sec
+    else { create_drive_direct(100, 100); }
+  }
+  // 6. Stop the Create
+   create_stop();
+  // 7. Disconnect from the Create
+  create_disconnect();
+}
+
+
+
+
+

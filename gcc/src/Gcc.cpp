@@ -96,6 +96,7 @@ bool Gcc::run(const QString& filename, const QString& port)
 	scriptFile.setFileName(QDir::temp().absoluteFilePath("kiprScript.sh"));
 	outputString += "#!/bin/bash\n";
 	outputString += "cd \"" + outputFileInfo.absolutePath() + "\"\n";
+	outputString += "clear\n";
 	outputString += "\"./" + outputFileInfo.fileName() + "\"\n";
 #endif
 

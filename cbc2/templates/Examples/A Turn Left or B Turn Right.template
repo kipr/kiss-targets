@@ -1,0 +1,38 @@
+/*****************************************************************
+*********  If A turn left, if B turn right (mirror behavior)               
+*****************************************************************/
+void turn_left(float seconds);
+void turn_right(float seconds);
+int main() {
+  create_connect(); // 1. Connect to the Create
+  // 2. Loop until the black button is pressed.
+  while (black_button() == 0) {
+    // 3. If the 'A' button is pressed, then turn left
+    if (a_button() == 1) { turn_left(1.0); }
+    // 4. Else if the 'B' button is pressed, then turn right
+    else if (b_button() == 1) { turn_right(1.0); }
+  }
+  // 5. Disconnect from the Create.
+  create_disconnect();
+}
+/*Function definitions go below*/
+void turn_left(float seconds) {
+  // 1. Move the Create left wheel backward
+  //    and the right wheel forward
+  create_drive_direct(300, -300);
+  // 2. Delay for time equal to the parameter value
+  sleep(seconds);
+  // 3. Stop the Create
+  create_stop();
+}
+
+void turn_right(float seconds) {
+  // 1. Move the Create left wheel forward
+  //    and the right wheel backward
+  create_drive_direct(-300, 300);
+  // 2. Delay for time equal to the parameter value
+  sleep(seconds);
+  // 3. Stop the Create
+  create_stop();
+}
+

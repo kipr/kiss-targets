@@ -1,0 +1,74 @@
+//Actual code for Vision-guided Grab & Return
+#define SPEED 600  // nominal speed - small tires 1/5/11 
+#define DELTA 0    /* left motor speed adjust if needed */
+/*********** Robot port configuration ***********/ 
+#define R_MOTOR 0  /* motor port 0 */ 
+#define L_MOTOR 2  /* motor port 2 */ 
+#define TURN 1810L /* for black motors, direct to 1 3/4" wheels, 
+                      on 6.0" axle; more  for smaller wheels, wider
+                      track, or motors geared down to the wheel */ 
+#define FWD 4200L  /* max forward distance, in ticks */
+int main() {     
+  int i, speed_r, speed_l, y_loc=110; // camera limit 120 pixels down     
+  long dist;     
+  enable_servos();     
+  set_servo_position(1,1000); //claw ? open 
+  set_servo_position(0,1400); //arm - up     
+  printf("Fwd, vision-guided\n grab,lift- return v3.6a cbc\n");
+  sleep(3.);     
+  while(1){ //repeat loop to save adjustment of stop
+            //  [calibration y_loc] for next run   
+  /*calibrate stop based on track_y() by adjusting 
+      target position & camera tilt */
+    while(!black_button()){       
+      cbc_printf(1,1,"Set target at desired range");
+      cbc_printf(2,2,"use Right-Left PAD"); 
+      cbc_printf(2,3,"black button to end");             
+      i=y_loc;             
+      if(left_button()&& i>=5)i-=5;            
+      if(right_button() && i<=120)i+=5;            
+      track_update(); y_loc =i;             
+      cbc_printf(2,5,"Y loc = %d , actual = %d",y_loc,track_y(0,0));
+      sleep(.3); cbc_display_clear();
+    } // end calibrate display
+  // set reference on motor 2 [L_MOTOR]
+  clear_motor_position_counter(L_MOTOR); 
+  //**** start drive toward target         
+  mav(R_MOTOR,SPEED); mrp(L_MOTOR,SPEED+DELTA,FWD);        
+  // the key factor is the directional feedback gain   
+  while(get_motor_done(L_MOTOR)==0) {  
+    track_update();    
+    speed_r=SPEED-11*(track_x(0,0)-80)/6; // CBC camera max x=160
+    if (speed_r>1000)speed_r=1000; // keep speed within limits  
+    speed_l=SPEED+11*(track_x(0,0)-80)/6;            
+    if(speed_l>1000)speed_l=1000; // keep speed within limits
+    mav(R_MOTOR,speed_r); mav(L_MOTOR,speed_l);             
+    if (track_y(0,0)>y_loc){break;} //stop when close             
+    msleep(50L);
+  }  //end guide forward
+  off(R_MOTOR); off(L_MOTOR); 
+  //**** drop arm, then grab and pickup  
+  // for servo sg5010, CBC2  (850 w. knob) 1/15/11       
+  for (i=1400; i>=950; i-=50)
+	{set_servo_position(0,i);  sleep(.07);  }
+  //*** close claw
+  for (i=1000; i>=350 ;i-=50) // for servo sg5010, CBC2  1/15/11          
+ 	{set_servo_position(1,i);  sleep(.07); }         
+  //*** lift          
+  for(i=950; i<=1400; i+=50) 
+	{set_servo_position(0,i);  sleep(.07); } 
+  dist = get_motor_position_counter(L_MOTOR); // save forward dist
+  //*** turn around         
+  mrp(R_MOTOR,SPEED/2,TURN);  mrp(L_MOTOR,SPEED/2,-TURN);    
+  bmd(L_MOTOR); bmd(R_MOTOR);        
+  //*** drive back         
+  mrp(R_MOTOR,SPEED, dist-100L); // return distance - short arm  
+  mrp(L_MOTOR,SPEED+DELTA, dist-100L); bmd(L_MOTOR); off(R_MOTOR);        
+  //*** release pom 		 
+  for (i=500; i<=1000; i+=50) 
+	{set_servo_position(1,i);  sleep(.07);}         
+  //*** turn back         
+  mrp(R_MOTOR,SPEED/2,TURN);  mrp(L_MOTOR,SPEED/2,-TURN); 
+  bmd(L_MOTOR); bmd(R_MOTOR); 
+  } // end repeat loop
+} // end main

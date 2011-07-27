@@ -1,0 +1,8 @@
+[General]
+description=For UNIX and Windows Platforms
+display_name=Shell Script
+extensions=Unix Script (*.sh)|Windows Script (*.bat)
+name=shell
+default_extension=sh
+port_dialog=true
+c_style_blocks=false

@@ -29,9 +29,6 @@ public:
 	bool close();
 
 	void refreshSettings();
-	void moveTo(int line, int pos);
-	
-	bool exclusive() { return true; }
 
 private slots:
 	void update();

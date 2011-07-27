@@ -18,8 +18,8 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
  
-#ifndef __JAVA_H__
-#define __JAVA_H__
+#ifndef __SHELL_H__
+#define __SHELL_H__
 
 #include <qplugin.h>
 #include <QProcess>
@@ -29,34 +29,34 @@
 #include "TargetInterface.h"
 #include "SerialClient.h"
 
-class Java : public QObject, public TargetInterface
+class Shell : public QObject, public TargetInterface
 {
 	Q_OBJECT
 	Q_INTERFACES(TargetInterface)
 	
 public:
-	Java();
-	~Java();
+	Shell();
+	~Shell();
 
-	bool compile(const QString& filename, const QString& port);
-	bool run(const QString& filename, const QString& port);
 	bool download(const QString&, const QString&);
 	bool simulate(const QString& filename, const QString& port);
 
-	bool hasCompile() 	{ return true; }
-	bool hasRun() 		{ return true; }
 	bool hasDownload() 	{ return true; }
-	bool hasSimulate() 	{ return true; }
+	bool hasSimulate() 	
+	{
+		#ifndef Q_OS_WIN
+		return true;
+		#else
+		return false;
+		#endif
+	}
 
 private:
-	QProcess m_java;
 	QProcess m_outputBinary;
-	QString m_javaPath;
 	QString m_outputFileName;
 	QStringList m_cflags,m_lflags;
 	SerialClient m_serial;
 	
-	void processCompilerOutput();
 	void refreshSettings();
 };
 

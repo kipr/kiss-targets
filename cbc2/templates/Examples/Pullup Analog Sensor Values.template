@@ -1,0 +1,8 @@
+int main() {
+  while(a_button()==0) {
+    printf("Port 0 reflectance: %d ", analog10(0));
+    printf("Port 2 light: %d\n", analog10(2));
+    sleep(1);
+  }
+}
+

@@ -1,0 +1,18 @@
+/*****************************************************************
+*********  Game Template               
+*****************************************************************/
+int main() {
+  printf("Activity 6\n");
+  // 1. Connect to the Create
+  create_connect();
+  
+  // 2. Wait for the light sensor on analog port 0 to turn on
+  wait_for_light(0);
+  
+  // 3. Shut down in 5 seconds
+  shut_down_in(5.0);
+  
+  // 4. Drive each of the Create motors at 100 mm/sec
+  while (black_button()==0) {create_drive_direct(100, 100);}
+}
+

@@ -1,0 +1,15 @@
+/*************************************************************
+*********  Activity 1               
+*************************************************************/
+int main()
+{
+	// 1. Display "Hello World!" to the screen
+	printf("Hello World!\n");
+	
+	// 2. Delay for 2 seconds
+	sleep(2.0);    // Is the decimal point necessary?
+	
+	// 3. Display your name to the screen
+	printf("My name is Botguy.\n");
+}
+

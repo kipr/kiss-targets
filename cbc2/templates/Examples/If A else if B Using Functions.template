@@ -1,0 +1,22 @@
+void beep_once();
+void beep_twice();
+int main() {
+  printf("press A or B button, black button(.) to stop\n");
+  while (black_button() == 0) {
+    if (a_button() == 1) { beep_once(); }
+    else if (b_button() == 1) { beep_twice(); }
+  }
+}
+
+void beep_once() {
+  beep();
+  sleep(0.5);
+}
+
+void beep_twice() {
+  beep();
+  sleep(0.2);
+  beep();
+  sleep(0.5);
+}
+

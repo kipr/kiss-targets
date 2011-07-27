@@ -1,0 +1,18 @@
+/********************************************************************
+Drive the create until the right bumper is hit
+*********************************************************************/
+int main() {	
+  printf("Drive Create until right bumper is hit\n"); // announce program
+  printf("Press the A button to start\n"); // instructions to the user
+  while(a_button() < 1)	// As long as the CBC's A button has not been hit	
+    { /* wait (do nothing) */ }	
+  create_connect(); // Open the connection between the CBC and the Create	
+  while(get_create_rbump(0.1) < 1) // While right bumper has not been hit 
+    { // Tell the Create to move forward at a speed of 100mm/sec 
+	  printf("%d\n", get_create_rbump(0.1)); sleep(.05);	
+      create_drive_direct(100, 100); 
+    }		
+  create_stop(); // Stop the Create		
+  create_disconnect(); // Disconnect the Create
+}
+

@@ -1,0 +1,21 @@
+int main()
+{
+  printf("press A or B button, black button(.) to stop\n");
+  while (black_button() == 0)// The "." key in the simulator
+  {
+    if (a_button() == 1)// The "A" key in the simulator
+    {
+       beep();
+       sleep(0.5);
+    }
+    else if (b_button() == 1)// The "B" key in the simulator
+    {
+      beep();
+      sleep(0.2);
+      beep();
+      sleep(0.5);
+    }
+  }
+}
+
+

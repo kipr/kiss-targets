@@ -1,0 +1,26 @@
+/***************************************************************************
+*********  Proportional control Create             
+***************************************************************************/
+int main()
+{
+	int velocity = 0;
+	// 1. Set analog port 0 to floating analog
+	set_each_analog_state(1,0,0,0,0,0,0,0);
+	// 2. Connect to the Create
+	create_connect();
+	// 3. Loop until black button is pressed
+	while (black_button() == 0)
+	{
+		// 4. Set the velocity of both motors of the robot to a value
+		//    proportional to the difference between the reading
+		//    from the analog rangefinder on port 0 and 18 inches
+		velocity = 50 * (analog(0) - 18.0);
+		create_drive_direct(velocity, velocity);
+		sleep(0.1);
+	}
+	// 6. Stop the Create
+	create_stop();
+	// 7. Disconnect from the Create
+	create_disconnect();
+}
+

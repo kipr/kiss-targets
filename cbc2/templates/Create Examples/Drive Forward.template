@@ -1,0 +1,18 @@
+/********************************************************************  
+Drive the Create forward (straight) for 1m at a speed of 250mm/sec 
+*********************************************************************/
+int main()
+{	
+  printf("Drive Straight"); // announce the program	
+  sleep(1.0); // wait 1 second
+
+  create_connect(); // Open the connection between CBC and Create	
+  // As long as the create has not driven 1m	
+  while (get_create_distance(0.1) < 1000)
+  {		
+    create_drive_direct(250,250); // Drive forward at 250mm/sec
+  }
+	
+  create_stop(); // Stop the Create
+  create_disconnect(); // Disconnect the Create
+}

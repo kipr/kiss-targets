@@ -1,0 +1,10 @@
+/****************************************************
+*********  wait_for_light demo               
+****************************************************/
+
+int main()
+{
+  wait_for_light(0); // light sensor in analog port 0
+  printf("I have seen the light!\n");
+}
+
