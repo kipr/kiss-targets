@@ -54,6 +54,11 @@ public:
 	bool hasSimulate() 	{ return true; }
 	bool hasDebug() 	{ return true; }
 	bool hasUi() 		{ return true; }
+	
+	bool hasFileRequest() 	{ return true; }
+	
+	QStringList requestDir(const QString& filename, const QString& port);
+	QByteArray requestFile(const QString& filename, const QString& port);
 
 	void aPressed(const QString& port);
 	void bPressed(const QString& port);

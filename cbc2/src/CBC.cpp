@@ -200,6 +200,29 @@ DebuggerInterface* CBC::debug(const QString& filename, const QString& port)
 
 Tab* CBC::ui(const QString& port) { return new Controller(this, &m_serial, port); }
 
+QStringList CBC::requestDir(const QString& filename, const QString& port)
+{
+	m_serial.setPort(port);
+	m_serial.sendCommand(KISS_LS_COMMAND, filename.toAscii());
+	QByteArray data;
+	m_serial.waitForResult(CBC_LS_RESULT, data);
+	QDataStream stream(&data, QIODevice::ReadOnly);
+	QStringList ret;
+	stream >> ret;
+	m_serial.close();
+	return ret;
+}
+
+QByteArray CBC::requestFile(const QString& filename, const QString& port)
+{
+	m_serial.setPort(port);
+	m_serial.sendCommand(KISS_REQUEST_FILE_COMMAND, filename.toAscii());
+	QByteArray ret;
+	m_serial.waitForResult(CBC_REQUEST_FILE_RESULT, ret);
+	m_serial.close();
+	return ret;
+}
+
 void CBC::processCompilerOutput()
 {
 	bool foundError = false, foundWarning = false;
