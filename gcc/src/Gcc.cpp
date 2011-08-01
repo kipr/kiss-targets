@@ -39,18 +39,21 @@ Gcc::Gcc()
 {
 #ifdef Q_OS_WIN32
 	m_gccPath = QDir::currentPath() + "/targets/gcc/mingw/bin/gcc.exe";
-#elif defined(Q_OS_MAC)
-	m_gccPath="/usr/bin/gcc";
+	m_gppPath = QDir::currentPath() + "/targets/gcc/mingw/bin/g++.exe";
 #else
 	m_gccPath="/usr/bin/gcc";
+	m_gppPath="/usr/bin/g++";
 #endif
 
-	QFileInfo gccExecutable(m_gccPath);
-	if(!gccExecutable.exists()) {
-		QMessageBox::critical(0, "Error", "Could not find GCC Executable!");
+	if(!QFileInfo(m_gccPath).exists()) {
+		QMessageBox::critical(0, "Error", "Could not find gcc Executable!");
 		setError(true);
 	}
-
+	if(!QFileInfo(m_gppPath).exists()) {
+		QMessageBox::critical(0, "Error", "Could not find g++ Executable!");
+		setError(true);
+	}
+	
 	m_gcc.setReadChannel(QProcess::StandardError);
 	
 #ifdef Q_OS_WIN32
@@ -271,10 +274,9 @@ bool Gcc::compile(const QString& filename, const QString& port, bool debug)
 	if(m_gcc.exitCode() != 0) return false;
 
 	args.clear();
-	if(sourceInfo.completeSuffix() == "cpp") args << "-lstdc++";
 	args << "-o" << m_outputFileName << objectName;
 	args << m_lflags;
-	m_gcc.start(m_gccPath, args);
+	m_gcc.start((sourceInfo.completeSuffix() == "cpp") ? m_gppPath : m_gccPath, args);
 	m_gcc.waitForFinished();
 	processLinkerOutput();
 

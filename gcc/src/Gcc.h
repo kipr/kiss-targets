@@ -50,6 +50,7 @@ private:
 	QProcess m_gcc;
 	QProcess m_outputBinary;
 	QString m_gccPath;
+	QString m_gppPath;
 	QString m_outputFileName;
 	QStringList m_cflags,m_lflags;
 	
