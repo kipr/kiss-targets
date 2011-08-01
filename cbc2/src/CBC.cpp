@@ -98,7 +98,7 @@ QStringList CBC::getPaths(const QString& string)
 	while(1) {
 		int index = str.indexOf(QRegExp("\\w[ ]"));
 		if(index == -1) return list;
-		list << str.left(index+1).remove("\\");
+		list << str.left(index+1).remove("\\").mid(1);
 		str.remove(0, index+1);
 		while(!str.isEmpty() && string[0] == ' ') str.remove(0,1);
 	}
@@ -127,15 +127,20 @@ bool CBC::download(const QString& filename, const QString& port)
 
 	qWarning("Calling sendFile");
 
-	// if(!QSerialPort(port).open(QIODevice::ReadWrite)) return false; 
-
 	m_serial.setPort(port);
 	qWarning() << "Sending file";
 	
 	QString projectName = QFileInfo(filename).baseName();
 	m_serial.sendCommand(KISS_CREATE_PROJECT_COMMAND, projectName.toAscii());
-	QByteArray dest = (QString("/mnt/user/code/") + projectName + "/" + QFileInfo(filename).fileName()).toAscii();
+	const QString& common = QString("/mnt/user/code/") + projectName + "/";
+	QByteArray dest = (common + QFileInfo(filename).fileName()).toAscii();
 	m_serial.sendFile(filename, dest.data());
+	foreach(const QString& include, deps) {
+		const QString& path = common + 
+			QFileInfo(include).filePath().replace(QFileInfo(filename).path(), "").mid(1);
+		m_serial.sendCommand(KISS_MKDIR_COMMAND, QFileInfo(path).path().toAscii());
+		m_serial.sendFile(include, path.toAscii());
+	}
 	bool ret = m_serial.sendCommand(KISS_COMPILE_COMMAND, dest);
 	m_serial.close();
 	return ret;

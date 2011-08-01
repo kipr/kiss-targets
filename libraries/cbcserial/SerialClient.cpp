@@ -124,7 +124,11 @@ bool SerialClient::sendFile(const QString& name, const QString& destination)
 
 	QFileInfo info(name);
 	QFile fin(name);
-	fin.open(QIODevice::ReadOnly);
+	if(!fin.open(QIODevice::ReadOnly)) {
+		qWarning() << "Sending " << name << " to " << destination << " failed.";
+		return false;
+	}
+	qWarning() << "Sending " << name << " to " << destination;
 	dataStream << destination;
 	dataStream << fin.readAll();
 	fin.close();
