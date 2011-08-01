@@ -11,3 +11,4 @@ cbc2/build
 gcc/build
 haskell/build
 python/build
+external/src/Makefile.*
