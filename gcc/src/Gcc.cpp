@@ -93,7 +93,7 @@ bool Gcc::run(const QString& filename, const QString& port)
 #ifdef Q_OS_WIN32
 	scriptFile.setFileName(QDir::temp().absoluteFilePath("kiprBatchFile.cmd"));
 	outputString += "@echo off\r\n";
-	outputString += "set PATH=%PATH%;" + QDir::currentPath() + "\\targets\\gcc\\mingw\\bin\r\n";
+	outputString += "set PATH=%PATH%;" + QDir::toNativeSeparators(QDir::currentPath()) + "\\targets\\gcc\\mingw\\bin\r\n";
 	outputString += QDir::toNativeSeparators(outputFileInfo.absolutePath()) + "\\" + outputFileInfo.fileName() + "\r\n";
 	outputString +=  "pause\r\n";
 #else
