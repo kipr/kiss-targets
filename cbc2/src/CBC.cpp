@@ -136,8 +136,7 @@ bool CBC::download(const QString& filename, const QString& port)
 	QByteArray dest = (common + QFileInfo(filename).fileName()).toAscii();
 	m_serial.sendFile(filename, dest.data());
 	foreach(const QString& include, deps) {
-		const QString& path = common + 
-			QFileInfo(include).filePath().replace(QFileInfo(filename).path(), "").mid(1);
+		const QString& path = common + QFileInfo(include).filePath().replace(QFileInfo(filename).path(), "").mid(1);
 		m_serial.sendCommand(KISS_MKDIR_COMMAND, QFileInfo(path).path().toAscii());
 		m_serial.sendFile(include, path.toAscii());
 	}
@@ -158,7 +157,7 @@ bool CBC::simulate(const QString& filename, const QString& port)
 	scriptFile.setFileName(QDir::temp().absoluteFilePath("kiprBatchFile.cmd"));
 	outputString += "@echo off\r\n";
 	outputString += "set PATH=%PATH%;" + QDir::toNativeSeparators(QDir::currentPath()) + "\\targets\\gcc\\mingw\\bin\r\n";
-	outputString += QDir::toNativeSeparators(outputFileInfo.absolutePath()) + "\\" + outputFileInfo.fileName() + "\r\n";
+	outputString += "\"" + QDir::toNativeSeparators(outputFileInfo.absolutePath()) + "\\" + outputFileInfo.fileName() + "\"\r\n";
 	outputString +=  "pause\r\n";
 #else
 	scriptFile.setFileName(QDir::temp().absoluteFilePath("kiprScript.sh"));
