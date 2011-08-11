@@ -33,6 +33,7 @@
 #include <QMessageBox>
 #include <QDateTime>
 #include <QDebug>
+#include <QTemporaryFile>
 
 CBC::CBC()
 {
@@ -199,7 +200,7 @@ bool CBC::simulate(const QString& filename, const QString& port)
   return true;
 }
 
-bool Gcc::debugConsole(const QString& filename, const QString& port, const QList<Location>& bkpts)
+bool CBC::debugConsole(const QString& filename, const QString& port, const QList<Location>& bkpts)
 {
 	if(!compile(filename, port, true))
 		return false;
