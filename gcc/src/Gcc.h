@@ -39,6 +39,7 @@ public:
 
 	bool compile(const QString& filename, const QString& port);
 	bool run(const QString& filename, const QString& port);
+	bool debugConsole(const QString& filename, const QString& port, const QList<Location>& bkpts);
 	DebuggerInterface* debug(const QString& filename, const QString& port);
 
 	bool hasCompile() 	{ return true; }

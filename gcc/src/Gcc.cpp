@@ -31,6 +31,7 @@
 #include <QMessageBox>
 #include <QDateTime>
 #include <QProcessEnvironment>
+#include <QTemporaryFile>
 
 #include "Gdb.h"
 #include "Kiss.h"
@@ -134,7 +135,74 @@ bool Gcc::run(const QString& filename, const QString& port)
 #endif
 
 	return true;
+}
 
+bool Gcc::debugConsole(const QString& filename, const QString& port, const QList<Location>& bkpts)
+{
+	if(!compile(filename, port, true))
+		return false;
+
+	QString outputString;
+	QFileInfo outputFileInfo(m_outputFileName);
+	QFile scriptFile;
+	
+	QString breaks = "";
+	if(bkpts.size() > 0) {
+		QTemporaryFile temp;
+		temp.setAutoRemove(false);
+		if(!temp.open()) return false;
+		foreach(const Location& bkpt, bkpts) {
+			temp.write(("break " + bkpt.file + ":" + QString::number(bkpt.line) + "\n").toAscii());
+		}
+		breaks = QFileInfo(temp).absoluteFilePath();
+		temp.close();
+	}
+
+#ifdef Q_OS_WIN32
+	scriptFile.setFileName(QDir::temp().absoluteFilePath("kiprBatchFile.cmd"));
+	outputString += "@echo off\r\n";
+	outputString += "set PATH=%PATH%;" + QDir::toNativeSeparators(QDir::currentPath()) + "\\targets\\gcc\\mingw\\bin\r\n";
+	outputString += "gdb " + (breaks.isEmpty() ? "" : ("-x \"" + QDir::toNativeSeparators(breaks) + "\" ")) + "\"" +
+		QDir::toNativeSeparators(outputFileInfo.absolutePath()) + "\\" + outputFileInfo.fileName() + "\"\r\n";
+	outputString += "pause\r\n";
+#else
+	scriptFile.setFileName(QDir::temp().absoluteFilePath("kiprScript.sh"));
+	outputString += "#!/bin/bash\n";
+	outputString += "cd \"" + outputFileInfo.absolutePath() + "\"\n";
+	outputString += "clear\n";
+	outputString += "gdb " + (breaks.isEmpty() ? "" : ("-x \"" + breaks + "\" ")) + "\"./" + outputFileInfo.fileName() + "\"\n";
+#endif
+
+	if(!scriptFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+		qWarning("Cbc::debugConsole() Unable to open temp file for writing");
+		return false;
+	}
+
+	scriptFile.setPermissions(scriptFile.permissions() | QFile::ExeOwner);
+	scriptFile.write(outputString.toLocal8Bit());
+	scriptFile.close();
+
+	QStringList args;
+	QFileInfo scriptInfo(scriptFile);
+
+	m_outputBinary.setWorkingDirectory(outputFileInfo.absolutePath());
+
+#ifdef Q_OS_WIN32
+	QString startLine = "start \"" + m_outputFileName + "\" \"cmd /c " +
+						scriptInfo.absoluteFilePath() + "\"\n";
+	args << "/k";
+	m_outputBinary.start("cmd", args);
+	m_outputBinary.write(startLine.toLocal8Bit());
+	m_outputBinary.write("exit\n");
+#elif defined(Q_OS_MAC)
+	args << "-a" << "/Applications/Utilities/Terminal.app" << scriptInfo.absoluteFilePath();
+	m_outputBinary.start("open", args);
+#else
+	args << "-e" << scriptInfo.absoluteFilePath() + " && echo \"\nQuitting in 5 secs...\" && sleep 5";
+	m_outputBinary.start("xterm", args);
+#endif
+
+	return true;
 }
 
 DebuggerInterface* Gcc::debug(const QString& filename, const QString& port)

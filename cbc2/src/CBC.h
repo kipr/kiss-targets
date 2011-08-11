@@ -44,6 +44,7 @@ public:
 	void stop(const QString&);
 	bool download(const QString& filename, const QString& port);
 	bool simulate(const QString& filename, const QString& port);
+	bool debugConsole(const QString& filename, const QString& port, const QList<Location>& bkpts);
 	DebuggerInterface* debug(const QString&, const QString&);
 	Tab* ui(const QString& port);
 
