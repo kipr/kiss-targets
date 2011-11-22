@@ -47,12 +47,12 @@ Gcc::Gcc()
 #endif
 
 	if(!QFileInfo(m_gccPath).exists()) {
-		QMessageBox::critical(0, "Error", "Could not find gcc Executable!");
-		setError(true);
+		setError(true, "error_locating", QStringList() << "gcc" << m_gccPath);
+		return;
 	}
 	if(!QFileInfo(m_gppPath).exists()) {
-		QMessageBox::critical(0, "Error", "Could not find g++ Executable!");
-		setError(true);
+		setError(true, "error_locating", QStringList() << "g++" << m_gccPath);
+		return;
 	}
 	
 	m_gcc.setReadChannel(QProcess::StandardError);

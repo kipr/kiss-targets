@@ -55,8 +55,10 @@ public:
 	bool hasSimulate() 	{ return true; }
 	bool hasDebug() 	{ return true; }
 	bool hasUi() 		{ return true; }
+	bool hasScreenGrab()	{ return true; }
 	bool hasFileRequest() 	{ return true; }
 	
+	QByteArray screenGrab(const QString& port);
 	QStringList requestDir(const QString& filename, const QString& port);
 	QByteArray requestFile(const QString& filename, const QString& port);
 

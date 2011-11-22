@@ -34,6 +34,10 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QTemporaryFile>
+#include <QDesktopServices>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QUrl>
 
 CBC::CBC()
 {
@@ -46,12 +50,12 @@ CBC::CBC()
 #endif
 
 	if(!QFileInfo(m_gccPath).exists()) {
-		QMessageBox::critical(0, "Error", "Could not find gcc Executable!");
-		setError(true);
+		setError(true, "error_locating", QStringList() << "gcc" << m_gccPath);
+		return;
 	}
 	if(!QFileInfo(m_gppPath).exists()) {
-		QMessageBox::critical(0, "Error", "Could not find g++ Executable!");
-		setError(true);
+		setError(true, "error_locating", QStringList() << "g++" << m_gccPath);
+		return;
 	}
 	
 	m_gcc.setReadChannel(QProcess::StandardError);
@@ -274,6 +278,18 @@ DebuggerInterface* CBC::debug(const QString& filename, const QString& port)
 }
 
 Tab* CBC::ui(const QString& port) { return new Controller(this, &m_serial, port); }
+
+QByteArray CBC::screenGrab(const QString& port)
+{
+	m_serial.setPort(port);
+	QString filename = "/mnt/user/screenCapture.jpg";
+	m_serial.sendCommand(KISS_EXECUTE_COMMAND, (QString("imgtool --mode=cap --fmt=jpg --quality=100 ") + filename).toAscii());
+	m_serial.sendCommand(KISS_REQUEST_FILE_COMMAND, filename.toAscii());
+	QByteArray ret;
+	m_serial.waitForResult(CBC_REQUEST_FILE_RESULT, ret);
+	m_serial.close();
+	return ret;
+}
 
 QStringList CBC::requestDir(const QString& filename, const QString& port)
 {

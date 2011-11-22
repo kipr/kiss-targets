@@ -47,8 +47,8 @@ Java::Java()
 
 	QFileInfo JavaExecutable(m_javaPath);
 	if(!JavaExecutable.exists()) {
-		QMessageBox::critical(0, "Error", "Could not find Java Executable!");
-		setError(true);
+		setError(true, "error_locating_java", QStringList() << "java" << m_javaPath);
+		return;
 	}
 
 	m_java.setReadChannel(QProcess::StandardError);

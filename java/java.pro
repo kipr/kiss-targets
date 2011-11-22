@@ -47,7 +47,13 @@ target_lib.path = ../$${INSTALL_BASE}/targets/java/lib
 
 target.path = ../$${INSTALL_BASE}/targets/java
 
-INSTALLS += target target_base target_lib
+target_manual.files = 	manual/CBCJava_64.png \
+						manual/index.html \
+						manual/style.css
+											
+target_manual.path = ../$${INSTALL_BASE}/targets/java/manual
+
+INSTALLS += target target_base target_lib target_manual
 
 #############
 # Templates #
