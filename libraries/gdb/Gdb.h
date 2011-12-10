@@ -49,6 +49,8 @@ public:
  	void threads();
 
 	QStringList libs();
+	
+	void free();
 signals:
 	void error(QString error);
 	

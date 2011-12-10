@@ -265,3 +265,5 @@ QStringList Gdb::libs()
 {
 	return m_libs;
 }
+
+void Gdb::free() { delete this; }
