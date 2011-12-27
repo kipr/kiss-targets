@@ -1,7 +1,7 @@
 import cbccore.movement.*;
 import cbccore.sensors.vision.*;
 
-public class Main {
+class Main {
 	public static void main(String [] args) {
 		Camera c = new Camera();
 		

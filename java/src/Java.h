@@ -40,7 +40,7 @@ public:
 
 	bool compile(const QString& filename, const QString& port);
 	bool run(const QString& filename, const QString& port);
-	bool download(const QString&, const QString&);
+	int download(const QString&, const QString&);
 	bool simulate(const QString& filename, const QString& port);
 
 	bool hasCompile() 	{ return true; }

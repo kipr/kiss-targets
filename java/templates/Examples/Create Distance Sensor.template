@@ -7,7 +7,7 @@ import cbccore.events.*;
 import java.util.Arrays;
 import java.util.ArrayList;
 
-public class Main {
+class Main {
 	public static void main(String [] args) {
 		System.out.println("Please press the Black Hardware Button to start.");
 		

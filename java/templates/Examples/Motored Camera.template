@@ -1,7 +1,7 @@
 import cbccore.movement.*;
 import cbccore.vision.*;
 
-public class Main {
+class Main {
 	public static void main(String [] args) {
 		MotorDriveTrain dt = new MotorDriveTrain(new Wheel(0, 15.5744, 1.), new Wheel(1, 15.5744, 1.), 11.);
 		Camera c = new Camera();

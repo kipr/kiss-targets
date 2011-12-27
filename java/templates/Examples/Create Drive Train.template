@@ -1,7 +1,7 @@
 import cbccore.movement.DriveTrain;
 import cbccore.movement.plugins.create.CreateMovementPlugin;
 
-public class Main {
+class Main {
 	public static void main(String [] args) {
 		DriveTrain dt = null;
 		try {

@@ -314,11 +314,11 @@ bool Gcc::compile(const QString& filename, const QString& port, bool debug)
 	refreshSettings();
 
 #ifdef Q_OS_WIN32
-	m_outputFileName = sourceInfo.dir().absoluteFilePath(sourceInfo.baseName() + ".exe");
+	m_outputFileName = sourceInfo.dir().absoluteFilePath(sourceInfo.completeBaseName() + ".exe");
 #else
-	m_outputFileName = sourceInfo.dir().absoluteFilePath(sourceInfo.baseName());
+	m_outputFileName = sourceInfo.dir().absoluteFilePath(sourceInfo.completeBaseName());
 #endif
-	QString objectName = sourceInfo.dir().absoluteFilePath(sourceInfo.baseName() + ".o");
+	QString objectName = sourceInfo.dir().absoluteFilePath(sourceInfo.completeBaseName() + ".o");
 
 	QFileInfo outputInfo(m_outputFileName);
 	if(sourceInfo.lastModified() < outputInfo.lastModified())
@@ -345,7 +345,7 @@ bool Gcc::compile(const QString& filename, const QString& port, bool debug)
 	args.clear();
 	args << "-o" << m_outputFileName << objectName;
 	args << m_lflags;
-	m_gcc.start((sourceInfo.completeSuffix() == "cpp") ? m_gppPath : m_gccPath, args);
+	m_gcc.start((sourceInfo.suffix() == "cpp") ? m_gppPath : m_gccPath, args);
 	m_gcc.waitForFinished();
 	processLinkerOutput();
 

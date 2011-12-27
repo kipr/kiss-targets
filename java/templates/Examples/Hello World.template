@@ -6,8 +6,8 @@ import cbccore.motors.StraightMovement;
 import cbccore.movement.MotorDriveTrain;
 import cbccore.movement.Wheel;
 
-public class Main {
+class Main {
 	public static void main(String[] args) {
-		System.out.println("Welcome to CBCJava");
+		System.out.println("Welcome to CBCJVM");
 	}
 }

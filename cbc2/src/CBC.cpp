@@ -109,9 +109,9 @@ QStringList CBC::getPaths(const QString& string)
 	}
 }
 
-bool CBC::download(const QString& filename, const QString& port)
+int CBC::download(const QString& filename, const QString& port)
 {
-	if(!compile(filename, port)) return false;
+	if(!compile(filename, port)) return TargetInterface::CompileFailed;
 
 	qWarning("Calling gcc...");
 	m_gcc.reset();
@@ -135,7 +135,45 @@ bool CBC::download(const QString& filename, const QString& port)
 	m_serial.setPort(port);
 	qWarning() << "Sending file";
 	
-	QString projectName = QFileInfo(filename).baseName();
+	QString projectName = QFileInfo(filename).completeBaseName();
+	m_serial.sendCommand(KISS_CREATE_PROJECT_COMMAND, projectName.toAscii());
+	const QString& common = QString("/mnt/user/code/") + projectName + "/";
+	QByteArray dest = (common + QFileInfo(filename).fileName()).toAscii();
+	m_serial.sendFile(filename, dest.data());
+	foreach(const QString& include, deps) {
+		const QString& path = common + QFileInfo(include).filePath().replace(QFileInfo(filename).path(), "").mid(1);
+		m_serial.sendCommand(KISS_MKDIR_COMMAND, QFileInfo(path).path().toAscii());
+		m_serial.sendFile(include, path.toAscii());
+	}
+	bool ret = m_serial.sendCommand(KISS_COMPILE_COMMAND, dest);
+	m_serial.close();
+	return ret ? TargetInterface::NoError : TargetInterface::DownloadFailed;
+}
+
+bool CBC::rawDownload(const QString& filename, const QString& port)
+{
+	m_gcc.reset();
+
+	m_gcc.start(m_gccPath, QStringList() << "-E" << "-Wp,-MM" << filename);
+	m_gcc.waitForFinished();
+
+	qWarning("Gcc finished...");
+
+	QString depString = QString::fromLocal8Bit(m_gcc.readAllStandardOutput());
+
+	QStringList deps = getPaths(depString);
+
+	deps.removeFirst();
+	qWarning("deps.size()=%d", deps.size());
+
+	qWarning("deps=\"%s\"", qPrintable(deps.join(",")));
+
+	qWarning("Calling sendFile");
+
+	m_serial.setPort(port);
+	qWarning() << "Sending file";
+	
+	QString projectName = QFileInfo(filename).completeBaseName();
 	m_serial.sendCommand(KISS_CREATE_PROJECT_COMMAND, projectName.toAscii());
 	const QString& common = QString("/mnt/user/code/") + projectName + "/";
 	QByteArray dest = (common + QFileInfo(filename).fileName()).toAscii();
@@ -282,7 +320,7 @@ Tab* CBC::ui(const QString& port) { return new Controller(this, &m_serial, port)
 QByteArray CBC::screenGrab(const QString& port)
 {
 	m_serial.setPort(port);
-	QString filename = "/mnt/user/screenCapture.jpg";
+	const QString filename = "/mnt/user/screenCapture.jpg";
 	m_serial.sendCommand(KISS_EXECUTE_COMMAND, (QString("imgtool --mode=cap --fmt=jpg --quality=100 ") + filename).toAscii());
 	m_serial.sendCommand(KISS_REQUEST_FILE_COMMAND, filename.toAscii());
 	QByteArray ret;
@@ -428,11 +466,11 @@ bool CBC::compile(const QString& filename, const QString& port, bool debug)
 	refreshSettings();
 
 #ifdef Q_OS_WIN32
-	m_outputFileName = sourceInfo.dir().absoluteFilePath(sourceInfo.baseName() + ".exe");
+	m_outputFileName = sourceInfo.dir().absoluteFilePath(sourceInfo.completeBaseName() + ".exe");
 #else
-	m_outputFileName = sourceInfo.dir().absoluteFilePath(sourceInfo.baseName());
+	m_outputFileName = sourceInfo.dir().absoluteFilePath(sourceInfo.completeBaseName());
 #endif
-	QString objectName = sourceInfo.dir().absoluteFilePath(sourceInfo.baseName() + ".o");
+	QString objectName = sourceInfo.dir().absoluteFilePath(sourceInfo.completeBaseName() + ".o");
 
 	QFileInfo outputInfo(m_outputFileName);
 	if(sourceInfo.lastModified() < outputInfo.lastModified())
@@ -461,7 +499,7 @@ bool CBC::compile(const QString& filename, const QString& port, bool debug)
 	args << "-o" << m_outputFileName << objectName;
 	args << m_lflags;
 	qWarning() << "Linker Args:" << args;
-	m_gcc.start((sourceInfo.completeSuffix() == "cpp") ? m_gppPath : m_gccPath, args);
+	m_gcc.start((sourceInfo.suffix() == "cpp") ? m_gppPath : m_gccPath, args);
 	m_gcc.waitForFinished();
 	processLinkerOutput();
 

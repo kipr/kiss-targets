@@ -42,7 +42,8 @@ public:
 	bool compile(const QString& filename, const QString& port);
 	bool run(const QString&, const QString&);
 	void stop(const QString&);
-	bool download(const QString& filename, const QString& port);
+	int download(const QString& filename, const QString& port);
+	bool rawDownload(const QString& filename, const QString& port);
 	bool simulate(const QString& filename, const QString& port);
 	bool debugConsole(const QString& filename, const QString& port, const QList<Location>& bkpts);
 	DebuggerInterface* debug(const QString&, const QString&);
@@ -51,6 +52,7 @@ public:
 	bool hasCompile() 	{ return true; }
 	bool hasRun() 		{ return true; }
 	bool hasDownload() 	{ return true; }
+	bool hasRawDownload() 	{ return true; }
 	bool hasStop() 		{ return true; }
 	bool hasSimulate() 	{ return true; }
 	bool hasDebug() 	{ return true; }

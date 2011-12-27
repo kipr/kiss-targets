@@ -5,7 +5,7 @@ import cbccore.display.*;
 import cbccore.sensors.buttons.AbstractButton;
 import cbccore.sensors.buttons.BlackButton;
 
-public class Main {
+class Main {
 	public static void main(String[] args) throws InterruptedException, IOException {
 		Framebuffer fb0 = Display.getFramebuffer();
 		Pixmap g = new Pixmap(5, 80, Pixel.greenPixel);

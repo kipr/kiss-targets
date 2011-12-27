@@ -192,6 +192,12 @@
      </item>
      <item>
       <widget class="QTableWidget" name="ui_table">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::NoSelection</enum>
+       </property>
        <attribute name="horizontalHeaderVisible">
         <bool>true</bool>
        </attribute>
@@ -251,13 +257,6 @@
       <widget class="QPushButton" name="ui_refresh">
        <property name="text">
         <string>Refresh</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="ui_saveTo">
-       <property name="text">
-        <string>Save to...</string>
        </property>
       </widget>
      </item>

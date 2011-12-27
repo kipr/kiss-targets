@@ -68,13 +68,18 @@ bool Java::compile(const QString& filename, const QString& port)
 
 	refreshSettings();
 
-	m_outputFileName = sourceInfo.dir().absoluteFilePath(sourceInfo.baseName() + ".class");
+	m_outputFileName = sourceInfo.dir().absoluteFilePath(sourceInfo.baseName());
+	QStringList files = QDir(m_outputFileName).entryList(QStringList() << "*.class");
+	foreach(const QString& file, files) {
+		QFile(m_outputFileName + "/" + file).remove();
+	}
+	QDir().mkdir(m_outputFileName);
 
 	QFileInfo outputInfo(m_outputFileName);
 	if(sourceInfo.lastModified() < outputInfo.lastModified())
 		return true;
 
-	args << "-cp" << QDir::toNativeSeparators("targets/java/lib/CBCJVM.jar") << filename;
+	args << "-d" << m_outputFileName <<  "-cp" << QDir::toNativeSeparators("targets/java/lib/CBCJVM.jar") << filename;
 	qWarning() << args;
 	m_java.start(m_javaPath, args);
 	m_java.waitForFinished();
@@ -148,21 +153,24 @@ bool Java::run(const QString& filename, const QString& port)
 	return ret;
 }
 
-bool Java::download(const QString& filename, const QString& port)
+int Java::download(const QString& filename, const QString& port)
 {
-	if(!compile(filename, port)) return false;
+	if(!compile(filename, port)) return TargetInterface::CompileFailed;
 
 	// if(!QSerialPort(port).open(QIODevice::ReadWrite)) return false;
 
 	m_serial.setPort(port);
 	QString projectName = QFileInfo(filename).baseName();
 	m_serial.sendCommand(KISS_CREATE_PROJECT_COMMAND, projectName.toAscii());
-	QByteArray dest = (QString("/mnt/user/code/") + projectName + "/" + QFileInfo(filename).baseName() + ".class").toAscii();
+	QByteArray dest = (QString("/mnt/user/code/") + projectName + "/").toAscii();
 	QFileInfo fileInfo(filename);
-	m_serial.sendFile(fileInfo.absolutePath() + "/" + fileInfo.baseName() + ".class", dest.data());
-	bool ret = m_serial.sendCommand(KISS_COMPILE_COMMAND, dest);
+	QStringList files = QDir(fileInfo.absolutePath() + "/" + fileInfo.baseName()).entryList(QStringList() << "*.class");
+	foreach(const QString& file, files) {
+		m_serial.sendFile(fileInfo.absolutePath() + "/" + fileInfo.baseName() + "/" + file, dest.data() + file);
+	}
+	bool ret = m_serial.sendCommand(KISS_COMPILE_COMMAND, dest + ((files.size() != 1) ? QString("Main.class").toAscii() : files[0].toAscii()));
 	m_serial.close();
-	return ret;
+	return ret ? TargetInterface::NoError : TargetInterface::DownloadFailed;
 }
 
 void Java::processCompilerOutput()

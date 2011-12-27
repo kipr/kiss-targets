@@ -38,7 +38,7 @@ public:
 	Shell();
 	~Shell();
 
-	bool download(const QString&, const QString&);
+	int download(const QString&, const QString&);
 	bool simulate(const QString& filename, const QString& port);
 
 	bool hasDownload() 	{ return true; }

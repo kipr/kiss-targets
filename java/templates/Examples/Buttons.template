@@ -7,7 +7,7 @@ import cbccore.events.EventListenerAdapter;
 //import cbccore.motors.listeners.StopMotors;
 import cbccore.sensors.buttons.ButtonEmitter;
 
-public class Main {
+class Main {
 	public void run() {
 		EventManager manager = EventManager.get();
 		ButtonEmitter.get().start();
