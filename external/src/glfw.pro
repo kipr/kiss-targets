@@ -34,16 +34,16 @@ SOURCES += enable.c \
 HEADERS += internal.h
 
 macx: {
-	DEPENDPATH += glfw/lib/macosx
-	INCLUDEPATH += glfw/lib/macosx
-	SOURCES += 	macosx_enable.c \
-				macosx_fullscreen.c \
-				macosx_glext.c \
-				macosx_init.c \
-				macosx_joystick.c \
-				macosx_thread.c \
-				macosx_time.c \
-				macosx_window.c
+	DEPENDPATH += glfw/lib/cocoa
+	INCLUDEPATH += glfw/lib/cocoa
+	SOURCES += cocoa_thread.c
+	OBJECTIVE_SOURCES += cocoa_enable.m \
+		cocoa_fullscreen.m \
+		cocoa_glext.m \
+		cocoa_init.m \
+		cocoa_joystick.m \
+		cocoa_time.m \
+		cocoa_window.m
 	HEADERS += platform.h
 }
 

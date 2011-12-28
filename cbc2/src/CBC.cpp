@@ -434,13 +434,6 @@ void CBC::refreshSettings()
 
 	m_cflags << settings.value(QString(OS_NAME) + "/cflags").toString().split(' ', QString::SkipEmptyParts);
 	m_lflags << settings.value(QString(OS_NAME) + "/lflags").toString().split(' ', QString::SkipEmptyParts);
-
-#ifdef Q_OS_MAC
-	if(QSysInfo::MacintoshVersion == QSysInfo::MV_TIGER) {
-		m_cflags << "-isysroot" << "/Developer/SDKs/MacOSX10.4u.sdk";
-		m_lflags << "-isysroot" << "/Developer/SDKs/MacOSX10.4u.sdk";
-	}
-#endif
 }
 
 void CBC::aPressed(const QString& port) { m_serial.setPort(port); m_serial.sendCommand(KISS_PRESS_A_COMMAND); }

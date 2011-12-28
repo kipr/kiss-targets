@@ -21,8 +21,8 @@ CONSOLE = -"RUNTIME console REFERENCE _cstart_ OPTION { START=_cstart_ quiet sta
 
 # Default: Build all tests
 all: triangle.exe listmodes.exe mthello.exe pong3d.exe mtbench.exe \
-	particles.exe splitview.exe mipmaps.exe keytest.exe gears.exe \
-	boing.exe wave.exe
+	particles.exe splitview.exe mipmaps.exe gears.exe boing.exe \
+	wave.exe heightmap.exe
 
 
 # Rule for triangle
@@ -57,13 +57,9 @@ splitview.exe: splitview.c
 mipmaps.exe: mipmaps.c
 	$(CC) $(CFLAGS) /Fe$@ mipmaps.c $(LFLAGS) $(WINDOWS)
 
-# Rule for keytest
-keytest.exe: keytest.c
-	$(CC) $(CFLAGS) /Fe$@ keytest.c $(LFLAGS) $(CONSOLE)
-
 # Rule for gears
 gears.exe: gears.c
-	$(CC) $(CFLAGS) /Fe$@ gears.c $(LFLAGS) $(CONSOLE)
+	$(CC) $(CFLAGS) /Fe$@ gears.c $(LFLAGS) $(WINDOWS)
 
 # Rule for boing
 boing.exe: boing.c
@@ -72,3 +68,7 @@ boing.exe: boing.c
 # Rule for wave
 wave.exe: wave.c
 	$(CC) $(CFLAGS) /Fe$@ wave.c $(LFLAGS) $(WINDOWS)
+
+# Rule for heightmap
+heightmap.exe: heightmap.c getopt.c
+	$(CC) $(CFLAGS) /Fe$@ heightmap.c getopt.c $(LFLAGS) $(WINDOWS)

@@ -21,8 +21,8 @@ CONSOLE = -subsystem console
 
 # Default: Build all tests
 all: triangle.exe listmodes.exe mthello.exe pong3d.exe mtbench.exe \
-     particles.exe splitview.exe mipmaps.exe keytest.exe gears.exe \
-     boing.exe wave.exe
+     particles.exe splitview.exe mipmaps.exe gears.exe boing.exe \
+	 wave.exe heightmap.exe
 
 
 # Rule for triangle
@@ -57,13 +57,9 @@ splitview.exe: splitview.c
 mipmaps.exe: mipmaps.c
 	$(CC) $(CFLAGS) mipmaps.c $(LFLAGS)  -o $@ -s $(WINDOWS)
 
-# Rule for keytest
-keytest.exe: keytest.c
-	$(CC) $(CFLAGS) keytest.c $(LFLAGS) -o $@ -s $(CONSOLE)
-
 # Rule for gears
 gears.exe: gears.c
-	$(CC) $(CFLAGS) gears.c $(LFLAGS)  -o $@ -s $(CONSOLE)
+	$(CC) $(CFLAGS) gears.c $(LFLAGS)  -o $@ -s $(WINDOWS)
 
 # Rule for boing
 boing.exe: boing.c
@@ -72,3 +68,7 @@ boing.exe: boing.c
 # Rule for wave
 wave.exe: wave.c
 	$(CC) $(CFLAGS) wave.c $(LFLAGS)  -o $@ -s $(WINDOWS)
+
+# Rule for heightmap
+heightmap.exe: heightmap.c getopt.c
+	$(CC) $(CFLAGS) heightmap.c getopt.c $(LFLAGS)  -o $@ -s $(WINDOWS)

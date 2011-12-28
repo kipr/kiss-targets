@@ -2,8 +2,6 @@
 
 REM **********************************************************************
 REM * compile.bat - MS Windows compilation batch file
-REM * $Date: 2007/03/15 03:20:18 $
-REM * $Revision: 1.3 $
 REM *
 REM * This is a "helper" script for the top-level Makefile for GLFW.
 REM * It was introduced to eliminate incompability issues between
@@ -66,6 +64,14 @@ cd ..\..\examples
 
 
 REM ----------------------------------------------------------------------
+REM Build test programs
+REM ----------------------------------------------------------------------
+
+cd ..\tests
+%1 -f Makefile.win32.%2
+
+
+REM ----------------------------------------------------------------------
 REM Return to root directory
 REM ----------------------------------------------------------------------
 
@@ -88,6 +94,7 @@ IF EXIST .\lib\win32\image.o              del .\lib\win32\image.o
 IF EXIST .\lib\win32\init.o               del .\lib\win32\init.o
 IF EXIST .\lib\win32\input.o              del .\lib\win32\input.o
 IF EXIST .\lib\win32\joystick.o           del .\lib\win32\joystick.o
+IF EXIST .\lib\win32\stream.o             del .\lib\win32\stream.o
 IF EXIST .\lib\win32\tga.o                del .\lib\win32\tga.o
 IF EXIST .\lib\win32\thread.o             del .\lib\win32\thread.o
 IF EXIST .\lib\win32\time.o               del .\lib\win32\time.o
@@ -108,6 +115,7 @@ IF EXIST .\lib\win32\image_dll.o          del .\lib\win32\image_dll.o
 IF EXIST .\lib\win32\init_dll.o           del .\lib\win32\init_dll.o
 IF EXIST .\lib\win32\input_dll.o          del .\lib\win32\input_dll.o
 IF EXIST .\lib\win32\joystick_dll.o       del .\lib\win32\joystick_dll.o
+IF EXIST .\lib\win32\stream_dll.o         del .\lib\win32\stream_dll.o
 IF EXIST .\lib\win32\tga_dll.o            del .\lib\win32\tga_dll.o
 IF EXIST .\lib\win32\thread_dll.o         del .\lib\win32\thread_dll.o
 IF EXIST .\lib\win32\time_dll.o           del .\lib\win32\time_dll.o
@@ -129,6 +137,7 @@ IF EXIST .\lib\win32\image.obj            del .\lib\win32\image.obj
 IF EXIST .\lib\win32\init.obj             del .\lib\win32\init.obj
 IF EXIST .\lib\win32\input.obj            del .\lib\win32\input.obj
 IF EXIST .\lib\win32\joystick.obj         del .\lib\win32\joystick.obj
+IF EXIST .\lib\win32\stream.obj           del .\lib\win32\stream.obj
 IF EXIST .\lib\win32\tga.obj              del .\lib\win32\tga.obj
 IF EXIST .\lib\win32\thread.obj           del .\lib\win32\thread.obj
 IF EXIST .\lib\win32\time.obj             del .\lib\win32\time.obj
@@ -149,6 +158,7 @@ IF EXIST .\lib\win32\image_dll.obj        del .\lib\win32\image_dll.obj
 IF EXIST .\lib\win32\init_dll.obj         del .\lib\win32\init_dll.obj
 IF EXIST .\lib\win32\input_dll.obj        del .\lib\win32\input_dll.obj
 IF EXIST .\lib\win32\joystick_dll.obj     del .\lib\win32\joystick_dll.obj
+IF EXIST .\lib\win32\stream_dll.obj       del .\lib\win32\stream_dll.obj
 IF EXIST .\lib\win32\tga_dll.obj          del .\lib\win32\tga_dll.obj
 IF EXIST .\lib\win32\thread_dll.obj       del .\lib\win32\thread_dll.obj
 IF EXIST .\lib\win32\time_dll.obj         del .\lib\win32\time_dll.obj
@@ -177,7 +187,6 @@ IF EXIST .\lib\win32\init.tds             del .\lib\win32\init.tds
 REM Executables and related files
 IF EXIST .\examples\boing.exe             del .\examples\boing.exe
 IF EXIST .\examples\gears.exe             del .\examples\gears.exe
-IF EXIST .\examples\keytest.exe           del .\examples\keytest.exe
 IF EXIST .\examples\listmodes.exe         del .\examples\listmodes.exe
 IF EXIST .\examples\mipmaps.exe           del .\examples\mipmaps.exe
 IF EXIST .\examples\mtbench.exe           del .\examples\mtbench.exe
@@ -190,7 +199,6 @@ IF EXIST .\examples\wave.exe              del .\examples\wave.exe
 
 IF EXIST .\examples\boing.obj             del .\examples\boing.obj
 IF EXIST .\examples\gears.obj             del .\examples\gears.obj
-IF EXIST .\examples\keytest.obj           del .\examples\keytest.obj
 IF EXIST .\examples\listmodes.obj         del .\examples\listmodes.obj
 IF EXIST .\examples\mipmaps.obj           del .\examples\mipmaps.obj
 IF EXIST .\examples\mtbench.obj           del .\examples\mtbench.obj
@@ -203,7 +211,6 @@ IF EXIST .\examples\wave.obj              del .\examples\wave.obj
 
 IF EXIST .\examples\boing.tds             del .\examples\boing.tds
 IF EXIST .\examples\gears.tds             del .\examples\gears.tds
-IF EXIST .\examples\keytest.tds           del .\examples\keytest.tds
 IF EXIST .\examples\listmodes.tds         del .\examples\listmodes.tds
 IF EXIST .\examples\mipmaps.tds           del .\examples\mipmaps.tds
 IF EXIST .\examples\mtbench.tds           del .\examples\mtbench.tds
@@ -214,4 +221,16 @@ IF EXIST .\examples\splitview.tds         del .\examples\splitview.tds
 IF EXIST .\examples\triangle.tds          del .\examples\triangle.tds
 IF EXIST .\examples\wave.tds              del .\examples\wave.tds
 
+IF EXIST .\tests\accuracy.exe             del .\tests\accuracy.exe
+IF EXIST .\tests\defaults.exe             del .\tests\defaults.exe
+IF EXIST .\tests\events.exe               del .\tests\events.exe
+IF EXIST .\tests\fsaa.exe                 del .\tests\fsaa.exe
+IF EXIST .\tests\fsinput.exe              del .\tests\fsinput.exe
+IF EXIST .\tests\joysticks.exe            del .\tests\joysticks.exe
+IF EXIST .\tests\peter.exe                del .\tests\peter.exe
+IF EXIST .\tests\reopen.exe               del .\tests\reopen.exe
+IF EXIST .\tests\tearing.exe              del .\tests\tearing.exe
+IF EXIST .\tests\version.exe              del .\tests\version.exe
+
 :End
+

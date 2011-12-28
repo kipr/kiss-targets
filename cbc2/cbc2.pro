@@ -54,32 +54,37 @@ target_lib.path = ../$${INSTALL_BASE}/targets/cbc2/lib
 
 target.path = ../$${INSTALL_BASE}/targets/cbc2
 
-target_manual.files = 	manual/CBCCSS.css \
-						manual/CBCCSS_NOSCRIPT.css \
-						manual/cbcmanual.html \
-						manual/fdl-1.3.txt \
-						manual/KISSCBCManualBody.htm \
-						manual/KISSCBCManualTable.htm \
-						manual/Sensor_and_Motor_Manual_BB2011.pdf
-											
+# /manual/
+target_manual.files = manual/Sensor_and_Motor_Manual_BB2011.pdf
 target_manual.path = ../$${INSTALL_BASE}/targets/cbc2/manual
 
-target_manual_images.files = manual/Images/box-minus.bmp \
-							 manual/Images/box-null.GIF \
-							 manual/Images/box-plus.bmp \
-							 manual/Images/CBC_front_ports.jpg \
-							 manual/Images/image002.gif \
-							 manual/Images/image003.gif \
-							 manual/Images/image004.gif \
-							 manual/Images/image005.gif \
-							 manual/Images/image006.gif \
-							 manual/Images/image010.gif \
-							 manual/Images/sonar.jpg
+# /manual/c
+target_manual_c.files = manual/c/CBCCSS.css \
+	manual/c/CBCCSS_NOSCRIPT.css \
+	manual/c/cbcmanual.html \
+	manual/c/fdl-1.3.txt \
+	manual/c/KISSCBCManualBody.htm \
+	manual/c/KISSCBCManualTable.htm
 
-target_manual_images.path = ../$${INSTALL_BASE}/targets/cbc2/manual/Images
+target_manual_c.path = ../$${INSTALL_BASE}/targets/cbc2/manual/c
+
+# /manual/c/images
+target_manual_c_images.files = manual/c/images/box-minus.png \
+	 manual/c/images/box-null.png \
+	 manual/c/images/box-plus.png \
+	 manual/c/images/CBC_front_ports.jpg \
+	 manual/c/images/image002.gif \
+	 manual/c/images/image003.gif \
+	 manual/c/images/image004.gif \
+	 manual/c/images/image005.gif \
+	 manual/c/images/image006.gif \
+	 manual/c/images/image010.gif \
+	 manual/c/images/sonar.jpg
+
+target_manual_c_images.path = ../$${INSTALL_BASE}/targets/cbc2/manual/c/images
 
 
-INSTALLS += target target_base target_include target_lib target_manual target_manual_images
+INSTALLS += target target_base target_include target_lib target_manual target_manual_c target_manual_c_images
 
 #################
 # cbc2_sim stuff #

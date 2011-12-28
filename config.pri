@@ -4,7 +4,7 @@ CONFIG -= debug release_and_debug
 CONFIG += release
 
 !ppc {
-	mac:CONFIG += x86
+	mac:CONFIG += x86_64
 	QMAKE_MAC_SDK=/Developer/SDKs/MacOSX10.6.sdk
 }
 ppc {

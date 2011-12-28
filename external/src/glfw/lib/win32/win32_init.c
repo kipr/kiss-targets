@@ -1,11 +1,11 @@
 //========================================================================
 // GLFW - An OpenGL framework
-// File:        win32_init.c
-// Platform:    Windows
-// API version: 2.6
-// WWW:         http://glfw.sourceforge.net
+// Platform:    Win32/WGL
+// API version: 2.7
+// WWW:         http://www.glfw.org/
 //------------------------------------------------------------------------
-// Copyright (c) 2002-2006 Camilla Berglund
+// Copyright (c) 2002-2006 Marcus Geelnard
+// Copyright (c) 2006-2010 Camilla Berglund <elmindreda@elmindreda.org>
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -42,7 +42,7 @@
 //************************************************************************
 
 //========================================================================
-// _glfwInitLibraries() - Load necessary libraries (DLLs)
+// Load necessary libraries (DLLs)
 //========================================================================
 
 static int _glfwInitLibraries( void )
@@ -113,7 +113,7 @@ static int _glfwInitLibraries( void )
 
 
 //========================================================================
-// _glfwFreeLibraries() - Unload used libraries (DLLs)
+// Unload used libraries (DLLs)
 //========================================================================
 
 static void _glfwFreeLibraries( void )
@@ -139,7 +139,7 @@ static void _glfwFreeLibraries( void )
 
 
 //========================================================================
-// _glfwInitThreads() - Initialize GLFW thread package
+// Initialize GLFW thread package
 //========================================================================
 
 static void _glfwInitThreads( void )
@@ -161,7 +161,7 @@ static void _glfwInitThreads( void )
 
 
 //========================================================================
-// _glfwTerminateThreads() - Terminate GLFW thread package
+// Terminate GLFW thread package
 //========================================================================
 
 static void _glfwTerminateThreads( void )
@@ -202,7 +202,7 @@ static void _glfwTerminateThreads( void )
 
 
 //========================================================================
-// _glfwTerminate_atexit() - Terminate GLFW when exiting application
+// Terminate GLFW when exiting application
 //========================================================================
 
 void _glfwTerminate_atexit( void )
@@ -217,7 +217,7 @@ void _glfwTerminate_atexit( void )
 //************************************************************************
 
 //========================================================================
-// _glfwPlatformInit() - Initialize various GLFW state
+// Initialize various GLFW state
 //========================================================================
 
 int _glfwPlatformInit( void )
@@ -228,67 +228,67 @@ int _glfwPlatformInit( void )
     // with the FOREGROUNDLOCKTIMEOUT system setting (we do this as early
     // as possible in the hope of still being the foreground process)
     SystemParametersInfo( SPI_GETFOREGROUNDLOCKTIMEOUT, 0,
-                          &_glfwLibrary.Sys.ForegroundLockTimeout, 0 );
+                          &_glfwLibrary.Sys.foregroundLockTimeout, 0 );
     SystemParametersInfo( SPI_SETFOREGROUNDLOCKTIMEOUT, 0, (LPVOID)0,
                           SPIF_SENDCHANGE );
 
     // Check which OS version we are running
     osi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
     GetVersionEx( &osi );
-    _glfwLibrary.Sys.WinVer = _GLFW_WIN_UNKNOWN;
+    _glfwLibrary.Sys.winVer = _GLFW_WIN_UNKNOWN;
     if( osi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
     {
         if( osi.dwMajorVersion == 4 && osi.dwMinorVersion < 10 )
         {
-            _glfwLibrary.Sys.WinVer = _GLFW_WIN_95;
+            _glfwLibrary.Sys.winVer = _GLFW_WIN_95;
         }
         else if( osi.dwMajorVersion == 4 && osi.dwMinorVersion < 90 )
         {
-            _glfwLibrary.Sys.WinVer = _GLFW_WIN_98;
+            _glfwLibrary.Sys.winVer = _GLFW_WIN_98;
         }
         else if( osi.dwMajorVersion == 4 && osi.dwMinorVersion == 90 )
         {
-            _glfwLibrary.Sys.WinVer = _GLFW_WIN_ME;
+            _glfwLibrary.Sys.winVer = _GLFW_WIN_ME;
         }
         else if( osi.dwMajorVersion >= 4 )
         {
-            _glfwLibrary.Sys.WinVer = _GLFW_WIN_UNKNOWN_9x;
+            _glfwLibrary.Sys.winVer = _GLFW_WIN_UNKNOWN_9x;
         }
     }
     else if( osi.dwPlatformId == VER_PLATFORM_WIN32_NT )
     {
         if( osi.dwMajorVersion == 4 && osi.dwMinorVersion == 0 )
         {
-            _glfwLibrary.Sys.WinVer = _GLFW_WIN_NT4;
+            _glfwLibrary.Sys.winVer = _GLFW_WIN_NT4;
         }
         else if( osi.dwMajorVersion == 5 && osi.dwMinorVersion == 0 )
         {
-            _glfwLibrary.Sys.WinVer = _GLFW_WIN_2K;
+            _glfwLibrary.Sys.winVer = _GLFW_WIN_2K;
         }
         else if( osi.dwMajorVersion == 5 && osi.dwMinorVersion == 1 )
         {
-            _glfwLibrary.Sys.WinVer = _GLFW_WIN_XP;
+            _glfwLibrary.Sys.winVer = _GLFW_WIN_XP;
         }
         else if( osi.dwMajorVersion == 5 && osi.dwMinorVersion == 2 )
         {
-            _glfwLibrary.Sys.WinVer = _GLFW_WIN_NET_SERVER;
+            _glfwLibrary.Sys.winVer = _GLFW_WIN_NET_SERVER;
         }
         else if( osi.dwMajorVersion >= 5 )
         {
-            _glfwLibrary.Sys.WinVer = _GLFW_WIN_UNKNOWN_NT;
+            _glfwLibrary.Sys.winVer = _GLFW_WIN_UNKNOWN_NT;
         }
     }
 
     // Do we have Unicode support?
-    if( _glfwLibrary.Sys.WinVer >= _GLFW_WIN_NT4 )
+    if( _glfwLibrary.Sys.winVer >= _GLFW_WIN_NT4 )
     {
         // Windows NT/2000/XP/.NET has Unicode support
-        _glfwLibrary.Sys.HasUnicode = GL_TRUE;
+        _glfwLibrary.Sys.hasUnicode = GL_TRUE;
     }
     else
     {
         // Windows 9x/ME does not have Unicode support
-        _glfwLibrary.Sys.HasUnicode = GL_FALSE;
+        _glfwLibrary.Sys.hasUnicode = GL_FALSE;
     }
 
     // Load libraries (DLLs)
@@ -304,10 +304,10 @@ int _glfwPlatformInit( void )
 #endif
 
     // Retrieve GLFW instance handle
-    _glfwLibrary.Instance = GetModuleHandle( NULL );
+    _glfwLibrary.instance = GetModuleHandle( NULL );
 
     // System keys are not disabled
-    _glfwWin.KeyboardHook = NULL;
+    _glfwWin.keyboardHook = NULL;
 
     // Initialise thread package
     _glfwInitThreads();
@@ -323,7 +323,7 @@ int _glfwPlatformInit( void )
 
 
 //========================================================================
-// _glfwPlatformTerminate() - Close window and kill all threads
+// Close window and kill all threads
 //========================================================================
 
 int _glfwPlatformTerminate( void )
@@ -348,7 +348,7 @@ int _glfwPlatformTerminate( void )
 
     // Restore FOREGROUNDLOCKTIMEOUT system setting
     SystemParametersInfo( SPI_SETFOREGROUNDLOCKTIMEOUT, 0,
-                          (LPVOID)_glfwLibrary.Sys.ForegroundLockTimeout,
+                          (LPVOID) _glfwLibrary.Sys.foregroundLockTimeout,
                           SPIF_SENDCHANGE );
 
     return GL_TRUE;
