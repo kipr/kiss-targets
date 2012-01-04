@@ -12,9 +12,9 @@
 struct vg_assembly *kissSimChooseWorld(struct __world *w)// display worlds and click on the one you want
 {
 	int x,y,i=0;
-	char *bb2011Title="Botball 2011", *arenaTitle="2010 Arena", *emptyTitle ="Empty World", *blankTitle = "Blank World";
+	char *bb2012Title="Botball 2012", *bb2011Title="Botball 2011", *arenaTitle="2010 Arena", *emptyTitle ="Empty World", *blankTitle = "Blank World";
 	
-	//*****BB2010 Arena World********************
+	// *****BB2010 Arena World********************
 	struct vg_object *arenaObj00=malloc(sizeof(struct vg_object));
 	struct vg_object *arenaObj01=malloc(sizeof(struct vg_object));
 	struct vg_object *arenaObj02=malloc(sizeof(struct vg_object));
@@ -37,14 +37,14 @@ struct vg_assembly *kissSimChooseWorld(struct __world *w)// display worlds and c
 	struct vg_object *arenaObj19=malloc(sizeof(struct vg_object));
 	struct vg_assembly *arena=malloc(sizeof(struct vg_assembly));
 	
-	//*****Empty World********************
+	// *****Empty World********************
 	struct vg_object *emptyObj00=malloc(sizeof(struct vg_object));
 	struct vg_object *emptyObj01=malloc(sizeof(struct vg_object));
 	struct vg_object *emptyObj02=malloc(sizeof(struct vg_object));
 	struct vg_object *emptyObj03=malloc(sizeof(struct vg_object));
 	struct vg_assembly *empty=malloc(sizeof(struct vg_assembly));
 	
-	//*****Blank World********************
+	// *****Blank World********************
 	struct vg_object *blankObj00=malloc(sizeof(struct vg_object));
 	struct vg_object *blankObj01=malloc(sizeof(struct vg_object));
 	struct vg_object *blankObj02=malloc(sizeof(struct vg_object));
@@ -53,7 +53,7 @@ struct vg_assembly *kissSimChooseWorld(struct __world *w)// display worlds and c
 	
 	struct vg_assembly *blankTape=malloc(sizeof(struct vg_assembly));
 	
-	//*****Tape and oil slicks********************
+	// *****Tape and oil slicks********************
 	struct vg_object *arena2010tapeObj00=malloc(sizeof(struct vg_object));
 	struct vg_object *arena2010tapeObj01=malloc(sizeof(struct vg_object));
 	struct vg_object *arena2010tapeObj02=malloc(sizeof(struct vg_object));
@@ -72,8 +72,52 @@ struct vg_assembly *kissSimChooseWorld(struct __world *w)// display worlds and c
 	struct vg_object *arena2010tapeObj15=malloc(sizeof(struct vg_object));
 	struct vg_assembly *arena2010tape=malloc(sizeof(struct vg_assembly));
 	
-	//*****2011 PVC********************
-	//declare pointer variables to the parts of the assembly and the assembly
+	// *****2012 PVC********************
+	// declare pointer variables to the parts of the assembly and the assembly
+	struct vg_object *bb2012Obj00=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj01=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj02=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj03=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj04=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj05=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj06=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj07=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj08=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj09=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj10=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj11=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj12=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj13=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj14=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj15=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj16=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj17=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012Obj18=malloc(sizeof(struct vg_object));
+	struct vg_assembly *bb2012=malloc(sizeof(struct vg_assembly));
+	
+	// *****2012 Tape********************
+	struct vg_object *bb2012TapeObj00=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012TapeObj01=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012TapeObj02=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012TapeObj03=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012TapeObj04=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012TapeObj05=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012TapeObj06=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012TapeObj07=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012TapeObj08=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012TapeObj09=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012TapeObj10=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012TapeObj11=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012TapeObj12=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012TapeObj13=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012TapeObj14=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012TapeObj15=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012TapeObj16=malloc(sizeof(struct vg_object));
+	struct vg_object *bb2012TapeObj17=malloc(sizeof(struct vg_object));
+	struct vg_assembly *bb2012Tape=malloc(sizeof(struct vg_assembly));
+	
+	// *****2011 PVC********************
+	// declare pointer variables to the parts of the assembly and the assembly
 	struct vg_object *bb2011Obj00=malloc(sizeof(struct vg_object));
 	struct vg_object *bb2011Obj01=malloc(sizeof(struct vg_object));
 	struct vg_object *bb2011Obj02=malloc(sizeof(struct vg_object));
@@ -94,6 +138,7 @@ struct vg_assembly *kissSimChooseWorld(struct __world *w)// display worlds and c
 	struct vg_object *bb2011Obj17=malloc(sizeof(struct vg_object));
 	struct vg_object *bb2011Obj18=malloc(sizeof(struct vg_object));
 	struct vg_assembly *bb2011=malloc(sizeof(struct vg_assembly));
+	
 	
 	//*****2011 Tape********************
 	//declare pointer variables to the parts of the assembly and the assembly
@@ -143,6 +188,103 @@ struct vg_assembly *kissSimChooseWorld(struct __world *w)// display worlds and c
 	//declare background color values to use in graphics_fill
 	int fill_r=255, fill_g=255, fill_b=255;
 	//end of Declarations...
+	
+	//******BB2012 Arena World Coordiantes
+	
+	// Board sides
+	vg_make_line(bb2012Obj00,0.0,0.00,244.00,0.00,255,255,255,200,200,200);
+	vg_make_line(bb2012Obj01,244.00,0.00,244.00,244.00,255,255,255,200,200,200);
+	bb2012Obj00->next=bb2012Obj01;
+	vg_make_line(bb2012Obj02,244.00,244.00,0.00,244.00,255,255,255,200,200,200);
+	bb2012Obj01->next=bb2012Obj02;
+	vg_make_line(bb2012Obj03,0.00,244.00,0.00,0.00,255,255,255,200,200,200);
+	bb2012Obj02->next=bb2012Obj03;
+	
+	// protected reef
+	vg_make_line(bb2012Obj04,16.00,0.00,16.00,31.00,255,255,255,200,200,200);
+	bb2012Obj03->next=bb2012Obj04;
+	vg_make_line(bb2012Obj05,0.00,31.00,16.00,31.00,255,255,255,200,200,200);
+	bb2012Obj04->next=bb2012Obj05;
+	vg_make_line(bb2012Obj06,228.00,213.00,244.00,213.00,255,255,255,200,200,200);
+	bb2012Obj05->next=bb2012Obj06;
+	vg_make_line(bb2012Obj07,228.00,213.00,228.00,244.00,255,255,255,200,200,200);
+	bb2012Obj06->next=bb2012Obj07;
+	
+	// Divider wall
+	vg_make_line(bb2012Obj08,0.00,122.00,76.00,122.00,255,255,255,200,200,200);
+	bb2012Obj07->next=bb2012Obj08;
+	vg_make_line(bb2012Obj09,168.00,122.00,244.00,122.00,255,255,255,200,200,200);
+	bb2012Obj08->next=bb2012Obj09;
+	
+	// Starting box
+	vg_make_line(bb2012Obj10,183.00,38.00,244.00,38.00,255,255,255,200,200,200);
+	bb2012Obj09->next=bb2012Obj10;
+	vg_make_line(bb2012Obj11,0.00,206.00,61.00,206.00,255,255,255,200,200,200);
+	bb2012Obj10->next=bb2012Obj11;
+	
+	vg_make_assembly(bb2012, 12, 0.00, 0.00, 0.00, bb2012Obj00);
+	vg_calculate_assembly_collision_parameters(bb2012);
+	bb2012->partsCollision=1;
+	bb2012->x=80;
+	bb2012->y=25;
+	//*****End of Your model code:********************
+	
+	// 2012 Tape //
+	
+	// First starting box
+	vg_make_triangle_fill(bb2012TapeObj00,178.00,0.00,183.00,0.00,178.00,38.00,0,0,0,200,200,200);
+	vg_make_triangle_fill(bb2012TapeObj01,178.00,38.00,183.00,38.00,183.00,0.00,0,0,0,200,200,200);//
+	bb2012TapeObj00->next=bb2012TapeObj01;
+	
+	// Second starting box
+	vg_make_triangle_fill(bb2012TapeObj02,61.00,206.00,66.00,206.00,61.00,244.00,0,0,0,200,200,200);
+	bb2012TapeObj01->next=bb2012TapeObj02;
+	vg_make_triangle_fill(bb2012TapeObj03,61.00,244.00,66.00,244.00,66.00,206.00,0,0,0,200,200,200);//
+	bb2012TapeObj02->next=bb2012TapeObj03;
+	
+	// First tape thing
+	vg_make_triangle_fill(bb2012TapeObj04,59.00,0.00,64.00,0.00,96.00,90.00,0,0,0,200,200,200);
+	bb2012TapeObj03->next=bb2012TapeObj04;
+	vg_make_triangle_fill(bb2012TapeObj05,96.00,90.00,101.00,90.00,64.00,0.00,0,0,0,200,200,200);//
+	bb2012TapeObj04->next=bb2012TapeObj05;
+	vg_make_triangle_fill(bb2012TapeObj06,96.00,90.00,101.00,90.00,96.00,122.00,0,0,0,200,200,200);
+	bb2012TapeObj05->next=bb2012TapeObj06;
+	vg_make_triangle_fill(bb2012TapeObj07,96.00,122.00,101.00,122.00,101.00,90.00,0,0,0,200,200,200);//
+	bb2012TapeObj06->next=bb2012TapeObj07;
+	
+	// Second tape thing
+	vg_make_triangle_fill(bb2012TapeObj08,143.00,122.00,148.00,122.00,143.00,154.00,0,0,0,200,200,200);
+	bb2012TapeObj07->next=bb2012TapeObj08;
+	vg_make_triangle_fill(bb2012TapeObj09,143.00,154.00,148.00,154.00,148.00,122.00,0,0,0,200,200,200);//
+	bb2012TapeObj08->next=bb2012TapeObj09;
+	vg_make_triangle_fill(bb2012TapeObj10,143.00,154.00,148.00,154.00,180.00,244.00,0,0,0,200,200,200);
+	bb2012TapeObj09->next=bb2012TapeObj10;
+	vg_make_triangle_fill(bb2012TapeObj11,180.00,244.00,185.00,244.00,148.00,154.00,0,0,0,200,200,200);//
+	bb2012TapeObj10->next=bb2012TapeObj11;
+	
+	// Middle tape
+	vg_make_triangle_fill(bb2012TapeObj12,76.00,120.00,76.00,124.00,168.00,124.00,0,0,0,200,200,200);
+	bb2012TapeObj11->next=bb2012TapeObj12;
+	vg_make_triangle_fill(bb2012TapeObj13,168.00,124.00,168.00,120.00,76.00,120.00,0,0,0,200,200,200);//
+	bb2012TapeObj12->next=bb2012TapeObj13;
+	
+	// Green tape
+	vg_make_triangle_fill(bb2012TapeObj14,1.00,1.00,15.00,1.00,1.00,30.00,0,200,0,200,200,200);
+	bb2012TapeObj13->next=bb2012TapeObj14;
+	vg_make_triangle_fill(bb2012TapeObj15,1.00,30.00,15.00,30.00,15.00,1.00,0,200,0,200,200,200);//
+	bb2012TapeObj14->next=bb2012TapeObj15;
+	
+	// Pink tape
+	vg_make_triangle_fill(bb2012TapeObj16,243.00,243.00,229.00,243.00,243.00,214.00,200,0,0,200,200,200);
+	bb2012TapeObj15->next=bb2012TapeObj16;
+	vg_make_triangle_fill(bb2012TapeObj17,243.00,214.00,229.00,214.00,229.00,243.00,200,0,0,200,200,200);//
+	bb2012TapeObj16->next=bb2012TapeObj17;
+	
+	vg_make_assembly(bb2012Tape, 18, 0.00, 0.00, 0.00, bb2012TapeObj00);
+	vg_calculate_assembly_collision_parameters(bb2012Tape);
+	bb2012Tape->partsCollision=1;
+	bb2012Tape->x=80;
+	bb2012Tape->y=25;
 	
 	
 	//******BB2011 Arean World Coordiantes
@@ -401,7 +543,27 @@ struct vg_assembly *kissSimChooseWorld(struct __world *w)// display worlds and c
 	
 	while(kiss_get_mouse_button(0));
 	while(!kiss_get_mouse_button(0)){
+		// 2012
 		graphics_fill(200,200,200);		
+		NOBOLD g_printString("2012 Board: SELECT WORLD WITH MOUSE CLICK, USE RIGHT ARROW KEY TO SWITCH",20, 10,TEAL,1.0);
+		//NOBOLD g_printString(arenaTitle,20, +20,TEAL,3.0);
+		vg_draw_assembly(bb2012,DRAW);
+		graphics_update();
+		while(!right_button()){
+			if(kiss_get_mouse_button(0)){
+				w->simPaused = 0;
+				w->title=bb2012Title;
+				w->obstacles= bb2012;
+				w->markings=bb2012Tape;//*************************update
+				NOBOLD g_printString("2012 BOARD: SELECT WORLD WITH MOUSE CLICK, USE RIGHT ARROW KEY TO SWITCH",20, 10,200,200,200,1.0);
+				return;
+			}
+		}	
+		vg_draw_assembly(bb2012,ERASE);
+		while(right_button());
+		
+		// 2011
+		graphics_fill(200,200,200);
 		NOBOLD g_printString("2011 Board: SELECT WORLD WITH MOUSE CLICK, USE RIGHT ARROW KEY TO SWITCH",20, 10,TEAL,1.0);
 		//NOBOLD g_printString(arenaTitle,20, +20,TEAL,3.0);
 		vg_draw_assembly(bb2011,DRAW);

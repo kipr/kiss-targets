@@ -39,14 +39,15 @@ POST_TARGETDEPS += $$lib_dir.target $$include_dir.target
 ######################
 
 CBC_TARGET_FILE_INSTALL = ../$${INSTALL_BASE}/targets/cbc2/cbc2.target
+CBC2_SIM_PATH = ../libraries/simulator/cbc2_sim
 
 target_base.files = cbc2.api
 target_base.path = ../$${INSTALL_BASE}/targets/cbc2
 target_base.extra = $${COPY} cbc2.target $${CBC_TARGET_FILE_INSTALL}
 
-target_include.files = ../libraries/simulator/cbc2_sim/include/cbc2-sim.h ../libraries/simulator/cbc2_sim/include/cbc2cxx.h ../../libraries/simulator/cbc2_sim/src/botball.c
+target_include.files = $${CBC2_SIM_PATH}/include/cbc2-sim.h $${CBC2_SIM_PATH}/include/cbc2cxx.h $${CBC2_SIM_PATH}/src/botball.c
 
-target_lib.files = ../libraries/simulator/cbc2_sim/libcbc2_sim.a
+target_lib.files = $${CBC2_SIM_PATH}/libcbc2_sim.a
 
 
 target_include.path = ../$${INSTALL_BASE}/targets/cbc2/include
@@ -54,37 +55,13 @@ target_lib.path = ../$${INSTALL_BASE}/targets/cbc2/lib
 
 target.path = ../$${INSTALL_BASE}/targets/cbc2
 
-# /manual/
-target_manual.files = manual/Sensor_and_Motor_Manual_BB2011.pdf
-target_manual.path = ../$${INSTALL_BASE}/targets/cbc2/manual
+# Manual
+MANUAL_LOCATION = ../$${INSTALL_BASE}/targets/cbc2/manual
 
-# /manual/c
-target_manual_c.files = manual/c/CBCCSS.css \
-	manual/c/CBCCSS_NOSCRIPT.css \
-	manual/c/cbcmanual.html \
-	manual/c/fdl-1.3.txt \
-	manual/c/KISSCBCManualBody.htm \
-	manual/c/KISSCBCManualTable.htm
+manual.path = ../$${INSTALL_BASE}/targets/cbc2
+manual.extra = rm -Rf $${MANUAL_LOCATION}; $${COPY} -r $${KISS_DOCS}/cbc2_manual $${MANUAL_LOCATION}
 
-target_manual_c.path = ../$${INSTALL_BASE}/targets/cbc2/manual/c
-
-# /manual/c/images
-target_manual_c_images.files = manual/c/images/box-minus.png \
-	 manual/c/images/box-null.png \
-	 manual/c/images/box-plus.png \
-	 manual/c/images/CBC_front_ports.jpg \
-	 manual/c/images/image002.gif \
-	 manual/c/images/image003.gif \
-	 manual/c/images/image004.gif \
-	 manual/c/images/image005.gif \
-	 manual/c/images/image006.gif \
-	 manual/c/images/image010.gif \
-	 manual/c/images/sonar.jpg
-
-target_manual_c_images.path = ../$${INSTALL_BASE}/targets/cbc2/manual/c/images
-
-
-INSTALLS += target target_base target_include target_lib target_manual target_manual_c target_manual_c_images
+INSTALLS += target target_base target_include target_lib manual
 
 #################
 # cbc2_sim stuff #

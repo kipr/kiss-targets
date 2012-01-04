@@ -20,9 +20,9 @@ lflags=-lcbc2_sim -lkiss -lglfw -lGLee -lopengl32 -lwsock32
 lib_dirs=targets/gcc/lib targets/cbc2/lib
 
 [osx]
-cflags=-Wimplicit -include stdio.h -include stdlib.h -include cbc2-sim.h -include kiss-graphics.h -include kiss-compat.h -include kiss-serial.h -include kiss-input.h -include string.h -include math.h -include time.h -include cbc2cxx.h
+cflags=-Wimplicit -include stdio.h -include stdlib.h -include cbc2-sim.h -include kiss-graphics.h -include kiss-compat.h -include kiss-serial.h -include kiss-input.h -include string.h -include math.h -include time.h -include cbc2cxx.h -arch i386
 include_dirs=targets/gcc/include targets/cbc2/include
-lflags=-lcbc2_sim -lGLee -lkiss -lpthread -lm -lglfw -framework AGL -framework OpenGL  -framework Cocoa
+lflags=-lcbc2_sim -lGLee -lkiss -lpthread -lm -lglfw -framework AGL -framework OpenGL -framework Carbon -arch i386
 lib_dirs=targets/gcc/lib targets/cbc2/lib
 
 [nix]

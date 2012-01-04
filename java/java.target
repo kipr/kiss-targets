@@ -8,7 +8,9 @@ port_dialog=true
 c_style_blocks=true
 
 [Manuals]
-Manual=targets/java/manual/index.html
+CBCJVM Beginner's Guide = targets/java/manual/cbcjvm/index.html
+Java Beginner's Guide = targets/java/manual/java/index.html
+Java Wikibook = targets/java/manual/wikibook/pages/Java_Programming.html
 
 [Target]
 lib_dirs=targets/java/lib

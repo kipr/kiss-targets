@@ -16,9 +16,9 @@ lflags=-lkiss -lglfw -lGLee -lopengl32
 lib_dirs=targets/gcc/lib
 
 [osx]
-cflags=-Wimplicit
+cflags=-Wimplicit -arch i386
 include_dirs=targets/gcc/include
-lflags=-lGLee -lkiss -lpthread -lm -lglfw -framework AGL -framework OpenGL -framework Cocoa
+lflags=-lGLee -lkiss -lpthread -lm -lglfw -framework AGL -framework OpenGL -framework Carbon -arch i386
 lib_dirs=targets/gcc/lib
 
 [nix]

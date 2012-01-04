@@ -23,6 +23,8 @@ SOURCES += Java.cpp
 
 QMAKE_CLEAN += $(DESTDIR)/$(TARGET) src/*~
 
+COPY = cp
+
 #################
 # Extra targets #
 #################
@@ -47,20 +49,20 @@ target_lib.path = ../$${INSTALL_BASE}/targets/java/lib
 
 target.path = ../$${INSTALL_BASE}/targets/java
 
-target_manual.files = 	manual/CBCJava_64.png \
-						manual/index.html \
-						manual/style.css
-											
-target_manual.path = ../$${INSTALL_BASE}/targets/java/manual
+# Manual
+MANUAL_LOCATION = ../$${INSTALL_BASE}/targets/java/manual
 
-INSTALLS += target target_base target_lib target_manual
+manual.path = ../$${INSTALL_BASE}/targets/java
+manual.extra = rm -Rf $${MANUAL_LOCATION}; $${COPY} -r $${KISS_DOCS}/java_manual $${MANUAL_LOCATION}
+
+INSTALLS += target target_base target_lib manual
 
 #############
 # Templates #
 #############
 
 templates.path = ../$${INSTALL_BASE}/targets/java
-templates.extra = rm -Rf ../$${INSTALL_BASE}/targets/java/templates; cp -r templates ../$${INSTALL_BASE}/targets/java/templates
+templates.extra = rm -Rf ../$${INSTALL_BASE}/targets/java/templates; $${COPY} -r templates ../$${INSTALL_BASE}/targets/java/templates
 
 INSTALLS += templates
 
