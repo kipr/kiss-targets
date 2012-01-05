@@ -9,6 +9,7 @@ c_style_blocks=true
 
 [Manuals]
 CBCJVM Beginner's Guide = targets/java/manual/cbcjvm/index.html
+CBCJVM Documentation = targets/java/manual/cbcjvm/api/index.html
 Java Beginner's Guide = targets/java/manual/java/index.html
 Java Wikibook = targets/java/manual/wikibook/pages/Java_Programming.html
 

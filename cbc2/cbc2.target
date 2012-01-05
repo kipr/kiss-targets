@@ -9,9 +9,10 @@ c_style_blocks=true
 request_file_path=/mnt/browser/stage
 
 [Manuals]
-Manual=targets/cbc2/manual/c/cbcmanual.html
-Sensors and Motors Manual=targets/cbc2/manual/Sensor_and_Motor_Manual_BB2011.pdf
-Video Lessons=videos/videos.html
+Manual = targets/cbc2/manual/c/cbcmanual.html
+Manual (C++) = targets/cbc2/manual/cpp/doc/html/index.html
+Sensors and Motors Manual = targets/cbc2/manual/Sensor_and_Motor_Manual_BB2011.pdf
+Video Lessons = videos/videos.html
 
 [win]
 cflags=-Wimplicit -include stdio.h -include stdlib.h -include cbc2-sim.h -include kiss-graphics.h -include kiss-compat.h -include kiss-serial.h -include kiss-input.h -include math.h -include string.h -include time.h -include cbc2cxx.h

@@ -4,11 +4,7 @@
 //#include <kiss-create.h>
 //#include <kiss-input.h>
 
-void wait_for_light(int light_port_);
-void shut_down_in(float delay);
-void _shut_down_task();
-void run_for( float howLong, void (*funky));
-int target_cha_in_chb(int a, int b, int *x, int *y);
+#include "cbc2-sim.h"
 
 
 
@@ -149,14 +145,6 @@ int Bb_Game_Over=0; /* global flag*/
 int _shut_down_pid;
 int _shut_down_delay;
 
-void shut_down_in(float delay)
-{
-	Bb_Game_Over= 0;
-	printf("shut_down_in%f\n", delay);
-	_shut_down_delay=1000*delay;
-	_shut_down_pid= start_process(_shut_down_task);
-}
-
 void _shut_down_task()
 {
 	int i,j;
@@ -177,6 +165,14 @@ void _shut_down_task()
 		disable_servos(); // delete this line if you want your servos to freeze but remain powered at the end
 	}
 	printf(".\n");
+}
+
+void shut_down_in(float delay)
+{
+	Bb_Game_Over= 0;
+	printf("shut_down_in%f\n", delay);
+	_shut_down_delay=1000*delay;
+	_shut_down_pid= start_process(_shut_down_task);
 }
 
 

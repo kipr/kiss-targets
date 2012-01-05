@@ -192,7 +192,7 @@ void set_analog_floats(int mask);
 extern int gc_song_array[16][33]; // This is a global used to load and play songs on the Create.  It is filled by the user
 
 
-void target_cha_in_chb(int, int, int*, int*);
+int target_cha_in_chb(int, int, int*, int*);
 void set_digital_port_direction(int, int);
 
 #ifdef __cplusplus

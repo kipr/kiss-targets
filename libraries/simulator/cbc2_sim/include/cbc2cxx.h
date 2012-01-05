@@ -1,8 +1,6 @@
 /* 
  * C++ Wrapper for libcbc, by Braden McDorman <bmcdorman@kipr.org>
  * Copyright 2011 KISS Institute for Practical Robotics
- *
- * If you don't like how I did it, write your own.
  */
 
 #ifndef __CBC2_CXX_H__

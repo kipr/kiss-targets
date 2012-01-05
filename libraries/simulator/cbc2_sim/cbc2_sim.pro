@@ -8,6 +8,8 @@ TEMPLATE = lib
 TARGET = 
 DEPENDPATH += src
 
+INCLUDEPATH += include
+
 CONFIG -= qt debug debug_and_release
 CONFIG += staticlib release
 

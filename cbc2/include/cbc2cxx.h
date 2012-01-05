@@ -1,7 +1,6 @@
 /* 
  * C++ Wrapper for libcbc, by Braden McDorman <bmcdorman@kipr.org>
  * Copyright 2011 KISS Institute for Practical Robotics
- *
  */
 
 #ifndef __CBC2_CXX_H__
@@ -11,15 +10,11 @@
 
 typedef unsigned char port_t;
 
-/*! \class Sound
- */
 struct Sound {
 	static void tone(int frequency, int duration) { tone(frequency, duration); }
 	static void beep() { ::beep(); }
 };
 
-/*! \class Port
- */
 struct Port {
 	Port(port_t port) : m_port(port) {}
 	
@@ -29,8 +24,6 @@ protected:
 	port_t m_port;	
 };
 
-/*! \class Motor
- */
 struct Motor : Port {
 	Motor(port_t port) : Port(port) {}
 	
@@ -69,8 +62,6 @@ struct Motor : Port {
 	static void allOff() { ao(); }
 };
 
-/*! \class Servo
- */
 struct Servo : Port {
 	Servo(port_t port) : Port(port) {}
 	
@@ -83,14 +74,10 @@ struct Servo : Port {
 	static void setEnabled(bool enabled) { if(enabled) enable(); else disable(); }
 };
 
-/*! \class IntegerSensor
- */
 struct IntegerSensor {
 	virtual int getValue() const = 0;
 };
 
-/*! \class Analog
- */
 struct Analog : IntegerSensor, Port {
 	Analog(port_t port) : Port(port) {}
 	
@@ -105,14 +92,10 @@ struct Analog : IntegerSensor, Port {
 	static void setAnalogFloats(int mask) { set_analog_floats(mask); }
 };
 
-/*! \class BooleanSensor
- */
 struct BooleanSensor {
 	virtual bool getValue() const = 0;
 };
 
-/*! \class Digital
- */
 struct Digital : BooleanSensor, Port {
 	Digital(port_t port) : Port(port) {}
 	
@@ -122,52 +105,22 @@ struct Digital : BooleanSensor, Port {
 };
 
 namespace Button {
-	/*! \class A
-	 */
 	struct A : BooleanSensor 	{ bool getValue() const { return a_button() == 1; } };
-	
-	/*! \class B
-	 */
 	struct B : BooleanSensor 	{ bool getValue() const { return b_button() == 1; } };
-	
-	/*! \class Up
-	 */
 	struct Up : BooleanSensor 	{ bool getValue() const { return up_button() == 1; } };
-	
-	/*! \class Down
-	 */
 	struct Down : BooleanSensor 	{ bool getValue() const { return down_button() == 1; } };
-	
-	/*! \class Left
-	 */
 	struct Left : BooleanSensor 	{ bool getValue() const { return left_button() == 1; } };
-	
-	/*! \class Right
-	 */
 	struct Right : BooleanSensor 	{ bool getValue() const { return right_button() == 1; } };
-	
-	/*! \class Black
-	 */
 	struct Black : BooleanSensor 	{ bool getValue() const { return black_button() == 1; } };
 }
 
 namespace Accelerometer {
-	/*! \class X
-	 */
 	struct X : IntegerSensor { int getValue() const { return accel_x(); } };
-	
-	/*! \class Y
-	 */
 	struct Y : IntegerSensor { int getValue() const { return accel_y(); } };
-	
-	/*! \class Z
-	 */
 	struct Z : IntegerSensor { int getValue() const { return accel_z(); } };
 };
 
 namespace Vision {
-	/*! \class Blob
-	 */
 	struct Blob {
 		Blob(int ch, int i) : m_ch(ch), m_i(i) {}
 		
@@ -190,8 +143,6 @@ namespace Vision {
 		int m_i;
 	};
 	
-	/*! \class Channel
-	 */
 	struct Channel {
 		Channel(int ch) : m_ch(ch) {}
 		
@@ -204,8 +155,6 @@ namespace Vision {
 		int m_ch;
 	};
 	
-	/*! \class Camera
-	 */
 	struct Camera {
 		Camera() : m_channels((Channel[4]) { Channel(0), Channel(1), Channel(2), Channel(3) }) {}
 
@@ -222,8 +171,6 @@ namespace Vision {
 }
 
 namespace CreateSensor {
-	/*! \class Logged
-	 */
 	struct Lagged {
 		Lagged(float lag) : m_lag(lag) {}
 	protected:
@@ -349,8 +296,6 @@ enum CreateMode {
 	Full
 };
 
-/*! \class Create
- */
 struct Create {
 	int connect() { return create_connect(); }
 	void disconnect() { create_disconnect(); }
