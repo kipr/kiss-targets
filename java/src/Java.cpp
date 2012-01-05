@@ -97,18 +97,22 @@ bool Java::simulate(const QString& filename, const QString& port)
 	QFileInfo outputFileInfo(m_outputFileName);
 	QFile scriptFile;
 
+	QFileInfo fileInfo(filename);
+	QStringList files = QDir(fileInfo.absolutePath() + "/" + fileInfo.baseName()).entryList(QStringList() << "*.class");
+	QString name = files.size() == 1 ? QFileInfo(files[0]).baseName() : QString("Main");
+
 #ifdef Q_OS_WIN32
 	scriptFile.setFileName(QDir::temp().absoluteFilePath("kiprBatchFile.cmd"));
 	outputString += "@echo off\n";
 	outputString += "cd \"" + QDir::toNativeSeparators(outputFileInfo.absolutePath()) + "\"\n";
-	outputString += "java -cp . \"" + outputFileInfo.baseName() + "\"\n";
+	outputString += "java -cp \"" + outputFileInfo.baseName() + "\" \"" + name + "\"\n";
 	outputString +=  "pause\n";
 #else
 	scriptFile.setFileName(QDir::temp().absoluteFilePath("kiprScript.sh"));
 	outputString += "#!/bin/bash\n";
 	outputString += "cd \"" + outputFileInfo.absolutePath() + "\"\n";
 	outputString += "clear\n";
-	outputString += "java -cp . \"" + outputFileInfo.baseName() + "\"\n";
+	outputString += "java -cp \"" + outputFileInfo.baseName() + "\" \"" + name + "\"\n";
 #endif
 
 	qWarning() << outputString;
