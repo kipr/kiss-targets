@@ -1,5 +1,5 @@
 /**************************************************************************
- *  Copyright 2007-2011 KISS Institute for Practical Robotics             *
+ *  Copyright 2007-2012 KISS Institute for Practical Robotics             *
  *                                                                        *
  *  This file is part of KISS (Kipr's Instructional Software System).     *
  *                                                                        *
@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License     *
  *  along with KISS.  Check the LICENSE file in the project root.         *
  *  If not, see <http://www.gnu.org/licenses/>.                           *
-**************************************************************************/
+ **************************************************************************/
 
 /* BEGIN CreateLib.h */
 

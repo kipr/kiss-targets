@@ -3,7 +3,7 @@ include (../../kiss.pri)
 CONFIG -= debug release_and_debug
 CONFIG += release
 
-mac:CONFIG += x86
+mac:CONFIG += x86 x86_64
 QMAKE_MAC_SDK=/Developer/SDKs/MacOSX10.6.sdk
 
 unix:QMAKE_DEL_FILE=rm -rf
