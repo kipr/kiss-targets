@@ -101,18 +101,20 @@ bool Java::simulate(const QString& filename, const QString& port)
 	QStringList files = QDir(fileInfo.absolutePath() + "/" + fileInfo.baseName()).entryList(QStringList() << "*.class");
 	QString name = files.size() == 1 ? QFileInfo(files[0]).baseName() : QString("Main");
 
+	QString absPath = QFileInfo("targets/java/lib/CBCJVM.jar").absoluteFilePath();
+
 #ifdef Q_OS_WIN32
 	scriptFile.setFileName(QDir::temp().absoluteFilePath("kiprBatchFile.cmd"));
 	outputString += "@echo off\n";
 	outputString += "cd \"" + QDir::toNativeSeparators(outputFileInfo.absolutePath()) + "\"\n";
-	outputString += "java -cp \"" + outputFileInfo.baseName() + "\" \"" + name + "\"\n";
+	outputString += "java -cp \"" + outputFileInfo.baseName() + ":" + QDir::toNativeSeparators(absPath) + "\" \"" + name + "\"\n";
 	outputString +=  "pause\n";
 #else
 	scriptFile.setFileName(QDir::temp().absoluteFilePath("kiprScript.sh"));
 	outputString += "#!/bin/bash\n";
 	outputString += "cd \"" + outputFileInfo.absolutePath() + "\"\n";
 	outputString += "clear\n";
-	outputString += "java -cp \"" + outputFileInfo.baseName() + "\" \"" + name + "\"\n";
+	outputString += "java -cp \"" + outputFileInfo.baseName() + ":" + QDir::toNativeSeparators(absPath) + "\" \"" + name + "\"\n";
 #endif
 
 	qWarning() << outputString;

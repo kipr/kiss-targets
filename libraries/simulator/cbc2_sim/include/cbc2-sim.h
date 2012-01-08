@@ -9,7 +9,36 @@ extern "C" {
 
 #ifndef NOGRAPHICSSIMULATOR
 extern int __ks_flg;
-#define main() fake(); int ___main(); void __main_function(){___main(); __ks_flg=0;} int main() {int p; kissSim_init(); sleep(1.0); p=start_process(__main_function); while(__ks_flg) sleep(.05); kissSimPause(); sleep(.25); kill_process(p);} int ___main()
+
+#ifdef __cplusplus
+#define COUT_REDIR struct __redir : std::streambuf { \
+	protected: \
+		virtual int_type overflow(int_type c) { \
+			if(c == '\n') \
+				ks_printf((char*)"\n"); \
+			else \
+				ks_printf((char*)"%c", c); return c; } \
+	};
+#define COUT_REDIRECT_BEGIN streambuf* old = cout.rdbuf(); \
+	streambuf* ks = new __redir(); \
+	cout.rdbuf(ks);
+#define COUT_REDIRECT_END { delete ks; cout.rdbuf(old); }
+#else
+#define COUT_REDIR
+#define COUT_REDIRECT_BEGIN
+#define COUT_REDIRECT_END
+#endif
+
+
+#define main() fake(); \
+	COUT_REDIR \
+	int ___main(); \
+	void __main_function() { COUT_REDIRECT_BEGIN ___main(); __ks_flg=0; COUT_REDIRECT_END } \
+	int main() { \
+		int p; kissSim_init(); sleep(1.0); p=start_process(__main_function); \
+		while(__ks_flg) sleep(.05); kissSimPause(); sleep(.25); kill_process(p); \
+	} \
+	int ___main()
 #define printf ks_printf
 #define cbc_printf ks_cbc_printf
 #define cbc_display_clear ks_cbc_display_clear

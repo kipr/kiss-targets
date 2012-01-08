@@ -8,6 +8,9 @@
 
 #ifdef __cplusplus
 
+#include <iostream>
+#include <streambuf>
+
 typedef unsigned char port_t;
 
 struct Sound {
