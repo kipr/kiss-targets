@@ -70,14 +70,11 @@ bool Java::compile(const QString& filename, const QString& port)
 
 	m_outputFileName = sourceInfo.dir().absoluteFilePath(sourceInfo.baseName());
 	QStringList files = QDir(m_outputFileName).entryList(QStringList() << "*.class");
+
 	foreach(const QString& file, files) {
 		QFile(m_outputFileName + "/" + file).remove();
 	}
 	QDir().mkdir(m_outputFileName);
-
-	QFileInfo outputInfo(m_outputFileName);
-	if(sourceInfo.lastModified() < outputInfo.lastModified())
-		return true;
 
 	args << "-d" << m_outputFileName <<  "-cp" << QDir::toNativeSeparators("targets/java/lib/CBCJVM.jar") << filename;
 	qWarning() << args;
