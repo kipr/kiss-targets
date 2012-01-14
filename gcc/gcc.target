@@ -10,19 +10,19 @@ c_style_blocks=true
 Manual=targets/gcc/manual/gccmanual.html
 
 [win]
-cflags=-Wimplicit
+cflags=-Wall
 include_dirs=targets/gcc/include
 lflags=-lkiss -lglfw -lGLee -lopengl32
 lib_dirs=targets/gcc/lib
 
 [osx]
-cflags=-Wimplicit -arch i386
+cflags=-Wall -arch i386
 include_dirs=targets/gcc/include
 lflags=-lGLee -lkiss -lpthread -lm -lglfw -framework AGL -framework OpenGL -framework Carbon -arch i386
 lib_dirs=targets/gcc/lib
 
 [nix]
-cflags=-Wimplicit
+cflags=-Wall
 include_dirs=targets/gcc/include
 lflags=-lkiss -lglfw -lGL -lXrandr -lpthread
 lib_dirs=targets/gcc/lib

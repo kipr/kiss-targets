@@ -15,19 +15,19 @@ Sensors and Motors Manual = targets/cbc2/manual/Sensor_and_Motor_Manual_BB2011.p
 Video Lessons = videos/videos.html
 
 [win]
-cflags=-Wimplicit -include stdio.h -include stdlib.h -include cbc2-sim.h -include kiss-graphics.h -include kiss-compat.h -include kiss-serial.h -include kiss-input.h -include math.h -include string.h -include time.h -include cbc2cxx.h
+cflags=-Wall -include stdio.h -include stdlib.h -include cbc2-sim.h -include kiss-graphics.h -include kiss-compat.h -include kiss-serial.h -include kiss-input.h -include math.h -include string.h -include time.h -include cbc2cxx.h
 include_dirs=targets/gcc/include targets/cbc2/include
 lflags=-lcbc2_sim -lkiss -lglfw -lGLee -lopengl32 -lwsock32
 lib_dirs=targets/gcc/lib targets/cbc2/lib
 
 [osx]
-cflags=-Wimplicit -include stdio.h -include stdlib.h -include cbc2-sim.h -include kiss-graphics.h -include kiss-compat.h -include kiss-serial.h -include kiss-input.h -include string.h -include math.h -include time.h -include cbc2cxx.h -arch i386
+cflags=-Wall -include stdio.h -include stdlib.h -include cbc2-sim.h -include kiss-graphics.h -include kiss-compat.h -include kiss-serial.h -include kiss-input.h -include string.h -include math.h -include time.h -include cbc2cxx.h -arch i386
 include_dirs=targets/gcc/include targets/cbc2/include
 lflags=-lcbc2_sim -lGLee -lkiss -lpthread -lm -lglfw -framework AGL -framework OpenGL -framework Carbon -arch i386
 lib_dirs=targets/gcc/lib targets/cbc2/lib
 
 [nix]
-cflags=-Wimplicit -include stdio.h -include stdlib.h -include cbc2-sim.h -include kiss-graphics.h -include kiss-compat.h -include kiss-serial.h -include kiss-input.h -include math.h -include string.h -include time.h -include cbc2cxx.h
+cflags=-Wall -include stdio.h -include stdlib.h -include cbc2-sim.h -include kiss-graphics.h -include kiss-compat.h -include kiss-serial.h -include kiss-input.h -include math.h -include string.h -include time.h -include cbc2cxx.h
 include_dirs=targets/gcc/include targets/cbc2/include
 lflags=-lcbc2_sim -lkiss -lglfw -lGL -lXrandr -lpthread
 lib_dirs=targets/gcc/lib targets/cbc2/lib

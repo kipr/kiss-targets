@@ -295,13 +295,6 @@ void Gcc::refreshSettings()
 
 	m_cflags << settings.value(QString(OS_NAME) + "/cflags").toString().split(' ', QString::SkipEmptyParts);
 	m_lflags << settings.value(QString(OS_NAME) + "/lflags").toString().split(' ', QString::SkipEmptyParts);
-	
-#ifdef Q_OS_MAC
-	if(QSysInfo::MacintoshVersion == QSysInfo::MV_TIGER) {
-		m_cflags << "-isysroot" << "/Developer/SDKs/MacOSX10.4u.sdk";
-		m_lflags << "-isysroot" << "/Developer/SDKs/MacOSX10.4u.sdk";
-	}
-#endif
 }
 
 bool Gcc::compile(const QString& filename, const QString& port, bool debug)
