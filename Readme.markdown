@@ -18,6 +18,9 @@ The GL definitions must include both GLFW and GLee. libkiss should be downloaded
 
 	qmake -r
 	make clean
-	
+	make
+	make install
+
+The kiss archives will be generated in the root directory, which can be installed into kiss using File, Install Local Packages.	
 
 
